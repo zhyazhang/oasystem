@@ -1,0 +1,15 @@
+server:
+  port: 8888
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/oasystem?autoReconnect=true&useSSL=false&characterEncoding=utf-8
+    username: root
+    password: 123456
+
+  freemarker:
+    charset: UTF-8
+    content-type: text/html;charset=utf-8
+    template-loader-path: classpath:/templates
+    suffix: .ftl
+
