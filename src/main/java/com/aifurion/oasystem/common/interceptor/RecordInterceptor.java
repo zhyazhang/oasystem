@@ -1,8 +1,8 @@
 package com.aifurion.oasystem.common.interceptor;
 
 import com.aifurion.oasystem.common.tool.Tool;
-import com.aifurion.oasystem.dao.RolepowerListDao;
-import com.aifurion.oasystem.dao.SystemMenuDao;
+import com.aifurion.oasystem.dao.role.RolepowerListDao;
+import com.aifurion.oasystem.dao.system.SystemMenuDao;
 import com.aifurion.oasystem.dao.user.UserDao;
 import com.aifurion.oasystem.dao.user.UserLogDao;
 import com.aifurion.oasystem.entity.role.Rolemenu;
@@ -44,7 +44,7 @@ public class RecordInterceptor implements HandlerInterceptor {
 
            // long userId = Long.parseLong(session.getAttribute("userId"));
             long userId = Long.parseLong(String.valueOf(session.getAttribute("userId")));
-            User user = userDao.findByUserId(userId).get(0);
+            User user = userDao.findById(userId).get();
 
             List<Rolemenu> parentMenus = rolepowerListDao
                     .findByParentDisplayAll(0L, user.getRole().getRoleId(), true, false);
@@ -108,7 +108,7 @@ public class RecordInterceptor implements HandlerInterceptor {
         if (StringUtils.isEmpty(id)) {
             return;
         }
-        userLog.setUser(userDao.findByUserId(id).get(0));
+        userLog.setUser(userDao.findById(id).get());
 
         List<SystemMenu> systemMenus = (List<SystemMenu>) systemMenuDao.findAll();
 

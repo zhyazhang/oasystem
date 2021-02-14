@@ -12,4 +12,26 @@ spring:
     content-type: text/html;charset=utf-8
     template-loader-path: classpath:/templates
     suffix: .ftl
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 5MB
+      max-file-size: 500MB
+      max-request-size: 200MB
+      resolve-lazily: false
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.aifurion.oasystem.entity
+
+
+file:
+  root:
+    path: E:/Temp/path/oa/file
+img:
+  rootpath: E:/Temp/path/oa/images
+attachment:
+  roopath: E:/Temp/path/oa/attachment
+
+
+
 

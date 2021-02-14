@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
     <meta charset="UTF-8">
-    <link href="images/favicon.ico" rel="icon" type="image/x-icon"/>
-    <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <link href="images/favicon1.ico" rel="icon" type="image/x-icon"/>
+    <link href="images/favicon1.ico" rel="shortcut icon" type="image/x-icon"/>
     <title>OA办公自动化系统</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/login.css">
@@ -19,6 +17,21 @@
             height: 40px;
             font-size: 18px;
         }
+
+        /*
+                .btn {
+                    display: inline-block;
+                    box-sizing: border-box;
+                    border: 1px solid #cccccc;
+                    border-radius: 2px;
+                    width: 100px;
+                    height: 40px;
+                    line-height: 40px;
+                    font-size: 16px;
+                    color: #666;
+                    cursor: pointer;
+                    background: white linear-gradient(180deg, #ffffff 0%, #f3f3f3 100%);
+                } */
 
         .btn:hover {
             background: #3c83a5;
@@ -94,7 +107,6 @@
         .modal-error .icon {
             color: #f27474;
             border: 3px solid #f27474;
-        }
     </style>
 </head>
 
@@ -116,21 +128,12 @@
                         <input type="text" placeholder="UserName/TeL" autofocus="autofocus" value="${(userName)!''}"
                                name="userName" class="userName test"/>
                         <input type="password" placeholder="Password" value="" name="password" class="password test"/>
-
-
-                        <#--验证码-->
-
-                        <#--开发阶段关闭验证码-->
-
-                       <#-- <input type="text" placeholder="Code" style="margin-bottom: 20px;width:152px" name="code"
+                        <input type="text" placeholder="Code" style="margin-bottom: 20px;width:152px" name="code"
                                class="code test"/>
                         <div class="login-img" style="display:inline-block">
                             <img class="thisimg" onclick="this.src='captcha?r'+Date.now()" src="captcha" alt="验证码"
                                  style="width: 100px;height: 42px;border-radius: 3px;">
-                        </div>-->
-
-
-
+                        </div>
                         <br>
                         <button class="btn_login btn" type="submit">LOGIN</button>
 
@@ -180,6 +183,7 @@
 <#if errormess??>
     <script>
         $(function () {
+            console.log("fdsfdsfsfasdf");
             $('.error-mess').text('${errormess}');
             $('.alert-danger').css('display', 'block');
         })
@@ -197,10 +201,10 @@
     function check() {
         var userName = $('.userName').val().trim();
         var password = $('.password').val().trim();
-
-
-        //var code = $('.code').val().trim();
-
+        var code = $('.code').val().trim();
+        console.log(userName);
+        console.log(password);
+        console.log(code);
         var count = 1;
         if (userName == null || userName == "") {
             $('.error-mess').text("登录账号不能为空!");
@@ -216,30 +220,17 @@
             count = 0;
             return false;
         }
-
-
-
-       /* 开发阶段关闭验证码*/
-
-
-        /*if (code == null || code == "") {
+        if (code == null || code == "") {
             $('.error-mess').text("验证码不能为空!");
             $('.alert-danger').css('display', 'block');
             $('.code').css('border-color', "#a94442");
             count = 0;
             return false;
-        }*/
-
-
-
-
-
+        }
         console.log(count);
         return true;
     }
 
 </script>
 </body>
-
-
 </html>
