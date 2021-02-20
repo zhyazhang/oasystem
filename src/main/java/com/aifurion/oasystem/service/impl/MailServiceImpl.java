@@ -68,6 +68,12 @@ public class MailServiceImpl implements MailService {
 
     public static Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
 
+
+    @Override
+    public Mailnumber findOne(Long id) {
+        return mailNumberDao.findById(id).get();
+    }
+
     @Override
     public void UserpanelController() {
 

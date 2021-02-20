@@ -50,6 +50,8 @@ public interface MailService {
                                   String name, String title, String content, String affix, String filename) throws UnsupportedEncodingException, MessagingException;
 
 
+    Mailnumber findOne(Long id);
+
 
 
 }
