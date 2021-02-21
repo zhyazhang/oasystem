@@ -46,7 +46,7 @@ public interface NoteService {
 
     void deleteNotByNoteId(long noteId);
 
-    void delteCatalogById(Long catalogId);
+    void deleteCatalogById(Long catalogId);
 
     void addNoteType(HttpServletRequest request, String title, HttpSession session);
 

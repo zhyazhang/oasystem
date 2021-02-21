@@ -31,11 +31,13 @@ public interface NoteDao extends JpaRepository<Note, Long> {
 	@Query("update Note n set n.catalogId=?1,n.typeId=?2,n.statusId=?3,"
 			+ "n.title=?4,n.content=?5 where n.noteId=?6")
 	@Modifying
-	Integer updatecollect(Long catalogId,Long typeId,Long statusId,String title,String content,long noteId);
+	@Transactional
+	Integer updateCollect(Long catalogId, Long typeId, Long statusId, String title, String content, long noteId);
 
 	@Query("update Note n set n.isCollected=?1 where n.noteId=?2")
 	@Modifying
-	Integer updatecollect(long isCollected,long noteId);
+	@Transactional
+	Integer updateCollectByNoteId(long isCollected,long noteId);
 
 	//通过用户id查找
 	@Query("FROM Note n WHERE  n.noteId in (SELECT r.noteId from Noteuser r where r.userId=?1)")

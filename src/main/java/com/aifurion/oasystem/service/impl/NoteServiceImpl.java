@@ -34,11 +34,8 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -371,7 +368,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void delteCatalogById(Long catalogId) {
+    public void deleteCatalogById(Long catalogId) {
 
         catalogDao.delete(catalogId);
 
@@ -462,11 +459,11 @@ public class NoteServiceImpl implements NoteService {
                     userss.add(user);
                     // 再绑定其他人
                     for (String re : receiver) {
-                        System.out.println(re);
                         User user2 = userDao.findId(re);
-                        if (user2 == null) {
-                        } else
-                            userss.add(user2);
+                        if (user2 != null) {
+                             userss.add(user2);
+                        }
+
                     }
 
                 } else {
@@ -512,11 +509,12 @@ public class NoteServiceImpl implements NoteService {
                     userss = new HashSet<>();
                     userss.add(user);
                 }
-                noteDao.updatecollect(catalogId, typeId, statusId, note2.getTitle(), note2.getContent(), nid);
+                noteDao.updateCollect(catalogId, typeId, statusId, note2.getTitle(), note2.getContent(), nid);
             }
             request.setAttribute("success", "后台验证成功");
         }
         // 设置创建人
+        assert note != null;
         note.setCreatemanId(userid);
         note.setUserss(userss);
         noteDao.save(note);
@@ -531,7 +529,7 @@ public class NoteServiceImpl implements NoteService {
         Long userid = Long.valueOf(String.valueOf(session.getAttribute("userId")));
         String id = request.getParameter("id");
         String iscollected = request.getParameter("iscollected");
-        noteDao.updatecollect(Long.parseLong(iscollected), Long.parseLong(id));
+        noteDao.updateCollectByNoteId(Long.parseLong(iscollected), Long.parseLong(id));
         setSomething(baseKey, type, status, time, icon, model, null, null);
         Page<Note> upage = sortpage(page, null, userid, null, null, null, type, status, time);
         model.addAttribute("url", "notewrite");

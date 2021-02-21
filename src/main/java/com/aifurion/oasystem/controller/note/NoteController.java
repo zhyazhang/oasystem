@@ -144,7 +144,7 @@ public class NoteController {
 		for (Note note : noteList) {
 			noteService.deleteNotByNoteId(note.getNoteId());
 		}
-		noteService.delteCatalogById(catalogid);
+		noteService.deleteCatalogById(catalogid);
 
 		return "redirect:/noteview";
 	}
