@@ -2,6 +2,7 @@ package com.aifurion.oasystem.service;
 
 import com.aifurion.oasystem.common.formVaild.ResultVO;
 import com.aifurion.oasystem.entity.system.SystemTypeList;
+import com.aifurion.oasystem.entity.task.Tasklist;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -22,5 +23,13 @@ public interface TypeService {
     SystemTypeList findById(Long id);
 
     void deleteById(Long id);
+
+    SystemTypeList findOne(Long id);
+
+
+
+
+
+
 
 }

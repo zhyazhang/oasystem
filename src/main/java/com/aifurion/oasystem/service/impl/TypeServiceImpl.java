@@ -28,6 +28,11 @@ public class TypeServiceImpl implements TypeService {
 
 
     @Override
+    public SystemTypeList findOne(Long id) {
+        return typeDao.findById(id).get();
+    }
+
+    @Override
     public void checkForm(HttpServletRequest req, SystemTypeList menu, ResultVO resultVO) {
 
         HttpSession session = req.getSession();

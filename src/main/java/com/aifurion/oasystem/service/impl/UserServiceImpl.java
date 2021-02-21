@@ -46,6 +46,27 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private RoleDao roleDao;
 
+
+	@Override
+	public Long findPkId(Long taskId, Long userId) {
+		return userDao.findpkId(taskId, userId);
+	}
+
+	@Override
+	public User findUserByName(String name) {
+		return userDao.findId(name);
+	}
+
+	@Override
+	public Page<User> findByFatherId(Long id, Pageable pageable) {
+		return userDao.findByFatherId(id, pageable);
+	}
+
+	@Override
+	public User findOne(Long id) {
+		return userDao.findById(id).get();
+	}
+
 	@Override
 	public List<Position> selectdept(Long deptid) {
 		return positionDao.findByDeptidAndNameNotLike(deptid, "%经理");

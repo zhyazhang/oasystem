@@ -33,5 +33,17 @@ public interface UserService {
 
     Page<User> findMyEmployUser(int page, String baseKey, long parentid);
 
+    User findOne(Long id);
+
+    Page<User> findByFatherId(Long id, Pageable pageable);
+
+
+    User findUserByName(String name);
+
+    Long findPkId(Long taskId, Long userId);
+
+
+
+
 
 }

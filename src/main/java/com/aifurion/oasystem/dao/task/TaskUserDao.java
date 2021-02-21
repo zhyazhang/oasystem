@@ -33,7 +33,7 @@ public interface TaskUserDao extends PagingAndSortingRepository<Taskuser, Long> 
 
 	//根据接收人id和任务id查找状态id
 	@Query("select tu.statusId from Taskuser tu where tu.userId.userId=:userid and tu.taskId.taskId=:taskid ")
-	Long findByuserIdAndTaskId(@Param("userid")Long userid,@Param("taskid")Long taskid);
+	Long findByUserIdAndTaskId(@Param("userid")Long userid, @Param("taskid")Long taskid);
 	//找新任务
 	List<Taskuser> findByUserIdAndStatusId(User user, Integer id);
 
