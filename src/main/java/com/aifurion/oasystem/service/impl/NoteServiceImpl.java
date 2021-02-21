@@ -19,10 +19,14 @@ import com.aifurion.oasystem.entity.note.Note;
 import com.aifurion.oasystem.entity.note.Noteuser;
 import com.aifurion.oasystem.entity.system.SystemStatusList;
 import com.aifurion.oasystem.entity.system.SystemTypeList;
+import com.aifurion.oasystem.entity.user.Dept;
+import com.aifurion.oasystem.entity.user.Position;
 import com.aifurion.oasystem.entity.user.User;
 import com.aifurion.oasystem.service.FileService;
 import com.aifurion.oasystem.service.NoteService;
 import com.aifurion.oasystem.service.ProcessService;
+import com.github.pagehelper.util.StringUtil;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -37,8 +41,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -86,6 +97,300 @@ public class NoteServiceImpl implements NoteService {
 
 
     @Override
+    public void nameReceive(Model model, HttpServletRequest req, Long userId, int page, int size) {
+
+
+        Pageable pa = PageRequest.of(page, size);
+        String name = null;
+        String qufen = null;
+        Page<User> pageuser = null;
+        List<User> userlist = null;
+
+        if (!StringUtil.isEmpty(req.getParameter("title"))) {
+            name = req.getParameter("title").trim();
+        }
+        if (!StringUtil.isEmpty(req.getParameter("qufen"))) {
+            qufen = req.getParameter("qufen").trim();
+
+            if (StringUtil.isEmpty(name)) {
+                // 查询部门下面的员工
+                pageuser = userDao.findByFatherId(userId, pa);
+            } else {
+                // 查询名字模糊查询员工
+                pageuser = userDao.findbyFatherId(name, userId, pa);
+            }
+
+        } else {
+            if (StringUtil.isEmpty(name)) {
+                //查看用户并分页
+                pageuser = userDao.findAll(pa);
+            } else {
+                pageuser = userDao.findbyUserNameLike(name, pa);
+            }
+        }
+        userlist = pageuser.getContent();
+        // 查询部门表
+        Iterable<Dept> deptlist = deptDao.findAll();
+        // 查职位表
+        Iterable<Position> poslist = positionDao.findAll();
+        model.addAttribute("emplist", userlist);
+        model.addAttribute("page", pageuser);
+        model.addAttribute("deptlist", deptlist);
+        model.addAttribute("poslist", poslist);
+        model.addAttribute("url", "namereceive");
+
+
+    }
+
+    @Override
+    public void editNote(HttpServletRequest Request, HttpSession session, Model model, int page, int size) {
+
+        //验证的重载
+        if (!StringUtils.isEmpty(Request.getAttribute("errormess"))) {
+            Request.setAttribute("errormess", Request.getAttribute("errormess"));
+            Request.setAttribute("note", Request.getAttribute("note2"));
+        } else if (!StringUtils.isEmpty(Request.getAttribute("success"))) {
+            Request.setAttribute("success", Request.getAttribute("success"));
+            Request.setAttribute("note", Request.getAttribute("note2"));
+        }
+        // 目录
+        long userid = Long.parseLong(String.valueOf(session.getAttribute("userId")));
+
+        cataloglist = (List<Catalog>) catalogDao.findCataUser(userid);
+        //将根目录放在第一
+        if (cataloglist.size() == 0) {
+            cataloglist.add(catalogDao.findById(33l).get());
+        } else {
+            cataloglist.set(0, catalogDao.findById(33l).get());
+        }
+
+        // 用户 就是联系人
+        List<User> users = (List<User>) userDao.findAll();
+        String nId = Request.getParameter("id");
+        if (nId.contains("cata")) {
+            //从目录编辑那里进来的
+            String newnid = nId.substring(4, nId.length());
+            long ca = Long.parseLong(newnid);
+            Catalog cate = catalogDao.findById(ca).get();
+            Request.setAttribute("cata", cate);
+            Request.setAttribute("note", null);
+            Request.setAttribute("id", -3);
+        } else {
+            Long nid = Long.valueOf(nId);
+            // 新建
+            if (nid == -1) {
+                Request.setAttribute("note", null);
+                // 新建id
+                Request.setAttribute("id", nid);
+            }
+
+            // 修改
+            else if (nid > 0) {
+                Note note = noteDao.findById(nid).get();
+                long ca = note.getCatalogId();
+                Catalog cate = catalogDao.findById(ca).get();
+                Request.setAttribute("cata", cate);
+                Request.setAttribute("note", note);
+                // 修改id
+                Request.setAttribute("id", nid);
+            }
+            // Request.setAttribute("id", nid);
+        }
+        userget(page, size, model);
+
+        Request.setAttribute("users", users);
+        Request.setAttribute("calist", cataloglist);
+        typestatus(Request);
+
+    }
+
+
+    public void userget(int page, int size, Model model) {
+        Pageable pa = PageRequest.of(page, size);
+        //查看用户并分页
+        Page<User> pageuser = userDao.findAll(pa);
+        List<User> userlist = pageuser.getContent();
+        // 查询部门表
+        Iterable<Dept> deptlist = deptDao.findAll();
+        // 查职位表
+        Iterable<Position> poslist = positionDao.findAll();
+        model.addAttribute("page", pageuser);
+        model.addAttribute("emplist", userlist);
+        model.addAttribute("deptlist", deptlist);
+        model.addAttribute("poslist", poslist);
+        model.addAttribute("url", "namereceive");
+    }
+
+
+    @Override
+    public void findCatalog(Model model, HttpServletRequest request, HttpSession session, String cid,
+                            int page, String baseKey, String type, String status, String time, String icon) {
+
+        Long userid = Long.parseLong(String.valueOf(session.getAttribute("userId")));
+        model.addAttribute("catalog", "&id=" + cid);
+        //不为-2就是按照目录查找
+        if (!request.getParameter("id").equals("-2")) {
+            Long id = Long.valueOf(cid);
+            setSomething(baseKey, type, status, time, icon, model, id, null);
+            Page<Note> upage = sortpage(page, baseKey, userid, null, id, null, type, status, time);
+            request.setAttribute("sort2", "&id=" + cid);
+            paging(model, upage);
+            model.addAttribute("url", "notecata");
+            ////为-2就是按照最近查找
+        }
+        typestatus(request);
+
+
+    }
+
+    @Override
+    public void showAllNoteType(Model model, HttpServletRequest request, Long tid, Long cid, HttpSession session, int page, String baseKey, String type, String status, String time, String icon) {
+        Long userid = Long.valueOf(String.valueOf(session.getAttribute("userId")));
+
+        if (cid == -2) {
+
+            cid = null;
+        }
+        setSomething(baseKey, type, status, time, icon, model, cid, tid);
+        Page<Note> upage = sortpage(page, baseKey, userid, null, cid, tid, type, status, time);//获得数据之后就将cid重新设置
+        if (cid == null) {
+
+            cid = -2L;
+        }
+        request.setAttribute("sort2", "&id=" + cid + "&typeid=" + tid);
+        paging(model, upage);
+        model.addAttribute("url", "notetype");
+        typestatus(request);
+
+
+    }
+
+    @Override
+    public void showAllNotes(Model model, HttpServletRequest request, HttpSession session, int page, String baseKey, String type, String status, String time, String icon) {
+
+        Long userid = Long.parseLong(String.valueOf(session.getAttribute("userId")));
+
+        setSomething(baseKey, type, status, time, icon, model, null, null);
+        Page<Note> upage = sortpage(page, baseKey, userid, null, null, null, type, status, time);
+        typestatus(request);
+        if (baseKey != null) {
+            //如果有搜索关键字那么就记住它
+            request.setAttribute("sort", "&baseKey=" + baseKey);
+        }
+        //没有就默认查找所有
+        else {
+
+            request.setAttribute("sort", "&userid=" + userid);
+        }
+        paging(model, upage);
+        model.addAttribute("url", "notewrite");
+
+
+    }
+
+    @Override
+    public void downloadNoteFile(HttpServletResponse response, HttpServletRequest request) {
+
+
+        if (!(StringUtils.isEmpty(request.getParameter("paid")) || request.getParameter("paid") == null
+                || request.getParameter("paid").length() == 0)) {
+            long paid = Long.parseLong(request.getParameter("paid"));
+            attachment = attachmentDao.findByAttachmentId(paid);
+
+        }
+        if (!(StringUtils.isEmpty(request.getParameter("nid")) || request.getParameter("nid") == null
+                || request.getParameter("nid").length() == 0)) {
+            Long nid = Long.valueOf(request.getParameter("nid"));
+            Note note = noteDao.findById(nid).get();
+            attachment = attachmentDao.findByAttachmentId(note.getAttachId());
+        }
+
+        File file = fileService.get(attachment);
+        try {
+            // 在浏览器里面显示
+            response.setContentLength(attachment.getAttachmentSize().intValue());
+            response.setContentType(attachment.getAttachmentType());
+            response.setHeader("Content-Disposition",
+                    "attachment;filename=" + new String(attachment.getAttachmentName().getBytes(StandardCharsets.UTF_8), "ISO8859-1"));
+            ServletOutputStream sos = response.getOutputStream();
+            byte[] data = new byte[attachment.getAttachmentSize().intValue()];
+            IOUtils.readFully(new FileInputStream(file), data);
+            IOUtils.write(data, sos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
+    public void showNoteInfo(String id, HttpServletRequest Request, HttpServletResponse response, HttpSession session) {
+
+        Attachment attachment = null;
+        FileInputStream fis = null;
+        OutputStream os = null;
+        Long nid = Long.valueOf(id);
+        Note note = noteDao.findById(nid).get();
+        User user = userDao.findById(note.getCreatemanId()).get();
+        if (note.getAttachId() != null) {
+            attachment = attachmentDao.findByAttachmentId(note.getAttachId());
+            Request.setAttribute("att", attachment);
+        }
+        Request.setAttribute("note", note);
+        Request.setAttribute("user", user);
+
+
+    }
+
+    @Override
+    public void addNoteType(HttpServletRequest request, String title, HttpSession session) {
+
+
+        int flag = 0;
+        Long userid = Long.parseLong(String.valueOf(session.getAttribute("userId")));
+        User user = userDao.findById(userid).get();
+        String catalogName = request.getParameter("name");
+        if (catalogName != null) {
+            List<String> catanamelist = catalogDao.findCataName(userid);
+            for (String caname : catanamelist) {
+                if (caname.contains("(") && caname.contains(")"))
+                    caname = caname.substring(0, caname.indexOf("("));
+                if (caname.equals(catalogName)) {
+                    flag++;
+                }
+            }
+            if (flag == 0) {
+                catalogDao.save(new Catalog(catalogName, user));
+            }
+            if (flag > 0) {
+
+                catalogDao.save(new Catalog(catalogName + "(" + flag + ")", user));
+            }
+        }
+
+    }
+
+    @Override
+    public void delteCatalogById(Long catalogId) {
+
+        catalogDao.delete(catalogId);
+
+
+    }
+
+    @Override
+    public void deleteNotByNoteId(long noteId) {
+        noteDao.delete(noteId);
+    }
+
+    @Override
+    public List<Note> findByCatalogId(Long catalogId, Long realUserId) {
+
+
+        return noteDao.findByCatalogId(catalogId, realUserId);
+    }
+
+    @Override
     public Noteuser findNoteUserById(Long noteId, Long realUerId) {
 
 
@@ -96,7 +401,7 @@ public class NoteServiceImpl implements NoteService {
     public void deleteNote(long realuserId, long noteid) {
 
         //删除共享笔记就是只删除中间表noteid对应的那个userid
-		Note note =noteDao.findById(noteid).get();
+        Note note = noteDao.findById(noteid).get();
         if (note.getTypeId() == 7) {
             noteUserDao.deleteById(noteUserDao.findId(noteid, realuserId));
         }
@@ -106,118 +411,116 @@ public class NoteServiceImpl implements NoteService {
         }
 
 
-
     }
 
     @Override
     public void saveNote(MultipartFile file, Note note2, BindingResult br, HttpServletRequest request, HttpSession session) {
 
         Note note = null;
-		Long attid = null;
-		Set<User> userss = null;
-		Long userid = Long.parseLong(session.getAttribute("userId") + "");
-		User user = userDao.findById(userid).get();
-		Long nid = Long.valueOf(request.getParameter("id"));
-		// 接下来就是获取的数据
-		String catalogname = request.getParameter("catalogname");
-		String catalogName = catalogname.substring(1, catalogname.length());
-		long catalogId = catalogDao.findByCatalogName(catalogName);
-		String typename = request.getParameter("type");
-		long typeId = typeDao.findByTypeModelAndTypeName("aoa_note_list", typename).getTypeId();
-		String statusName = request.getParameter("status");
-		long statusId = statusDao.findByStatusModelAndStatusName("aoa_note_list", statusName).getStatusId();
+        Long attid = null;
+        Set<User> userss = null;
+        Long userid = Long.parseLong(session.getAttribute("userId") + "");
+        User user = userDao.findById(userid).get();
+        Long nid = Long.valueOf(request.getParameter("id"));
+        // 接下来就是获取的数据
+        String catalogname = request.getParameter("catalogname");
+        String catalogName = catalogname.substring(1, catalogname.length());
+        long catalogId = catalogDao.findByCatalogName(catalogName);
+        String typename = request.getParameter("type");
+        long typeId = typeDao.findByTypeModelAndTypeName("aoa_note_list", typename).getTypeId();
+        String statusName = request.getParameter("status");
+        long statusId = statusDao.findByStatusModelAndStatusName("aoa_note_list", statusName).getStatusId();
 
-		// 这里返回ResultVO对象，如果校验通过，ResultEnum.SUCCESS.getCode()返回的值为200；否则就是没有通过；
-		ResultVO res = BindingResultVOUtil.hasErrors(br);
-		if (!ResultEnum.SUCCESS.getCode().equals(res.getCode())) {
-			List<Object> list = new MapToList<>().mapToList(res.getData());
-			request.setAttribute("errormess", list.get(0).toString());
-		} else {
-			// nid为-1就是新建或者是从某个目录新建
-			if (nid == -1 || nid == -3) {
-				// 判断文件是否为空
-				if (!file.isEmpty()) {
-					attachment = (Attachment) fileService.saveFile(file, user, null, false);
-					attid = attachment.getAttachmentId();
+        // 这里返回ResultVO对象，如果校验通过，ResultEnum.SUCCESS.getCode()返回的值为200；否则就是没有通过；
+        ResultVO res = BindingResultVOUtil.hasErrors(br);
+        if (!ResultEnum.SUCCESS.getCode().equals(res.getCode())) {
+            List<Object> list = new MapToList<>().mapToList(res.getData());
+            request.setAttribute("errormess", list.get(0).toString());
+        } else {
+            // nid为-1就是新建或者是从某个目录新建
+            if (nid == -1 || nid == -3) {
+                // 判断文件是否为空
+                if (!file.isEmpty()) {
+                    attachment = (Attachment) fileService.saveFile(file, user, null, false);
+                    attid = attachment.getAttachmentId();
                 } else if (file.isEmpty()) {
 
                     attid = null;
                 }
 
-				// 0l表示新建的时候默认为没有收藏
-				note = new Note(note2.getTitle(), note2.getContent(), catalogId, typeId, statusId, attid, new Date(),
-						0l);
-				// 判断是否共享
-				if (request.getParameter("receiver") != null && (request.getParameter("receiver").trim().length() > 0)) {
-					userss = new HashSet<>();
-					String receivers = request.getParameter("receiver");
-					note.setReceiver(receivers);
+                // 0l表示新建的时候默认为没有收藏
+                note = new Note(note2.getTitle(), note2.getContent(), catalogId, typeId, statusId, attid, new Date(),
+                        0l);
+                // 判断是否共享
+                if (request.getParameter("receiver") != null && (request.getParameter("receiver").trim().length() > 0)) {
+                    userss = new HashSet<>();
+                    String receivers = request.getParameter("receiver");
+                    note.setReceiver(receivers);
 
-					String[] receiver = receivers.split(";");
-					// 先绑定自己再
-					userss.add(user);
-					// 再绑定其他人
-					for (String re : receiver) {
-						System.out.println(re);
-						User user2 = userDao.findId(re);
-						if (user2 == null) {
-						} else
-							userss.add(user2);
-					}
+                    String[] receiver = receivers.split(";");
+                    // 先绑定自己再
+                    userss.add(user);
+                    // 再绑定其他人
+                    for (String re : receiver) {
+                        System.out.println(re);
+                        User user2 = userDao.findId(re);
+                        if (user2 == null) {
+                        } else
+                            userss.add(user2);
+                    }
 
-				} else {
-					// 保存为该用户的笔记 绑定用户id
-					userss = new HashSet<>();
-					userss.add(user);
-				}
-			}
-			// nid大于0就是修改某个对象
-			if (nid > 0) {
-				note = noteDao.findById(nid).get();
-				if (note.getAttachId() == null) {
-					if (!file.isEmpty()) {
-						attachment = (Attachment) fileService.saveFile(file, user, null, false);
-						attid = attachment.getAttachmentId();
-						note.setAttachId(attid);
-						noteDao.save(note);
-					}
-				}
-				if (note.getAttachId() != null)
-					fileService.updateAtt(file, user, null, note.getAttachId());
+                } else {
+                    // 保存为该用户的笔记 绑定用户id
+                    userss = new HashSet<>();
+                    userss.add(user);
+                }
+            }
+            // nid大于0就是修改某个对象
+            if (nid > 0) {
+                note = noteDao.findById(nid).get();
+                if (note.getAttachId() == null) {
+                    if (!file.isEmpty()) {
+                        attachment = (Attachment) fileService.saveFile(file, user, null, false);
+                        attid = attachment.getAttachmentId();
+                        note.setAttachId(attid);
+                        noteDao.save(note);
+                    }
+                }
+                if (note.getAttachId() != null)
+                    fileService.updateAtt(file, user, null, note.getAttachId());
 
-			// 判断是否共享
-			if (request.getParameter("receiver") != null && (request.getParameter("receiver").trim().length() > 0)) {
-				userss = new HashSet<>();
-				String receivers = request.getParameter("receiver");
-				note.setReceiver(receivers);
+                // 判断是否共享
+                if (request.getParameter("receiver") != null && (request.getParameter("receiver").trim().length() > 0)) {
+                    userss = new HashSet<>();
+                    String receivers = request.getParameter("receiver");
+                    note.setReceiver(receivers);
 
-				String[] receiver = receivers.split(";");
-				// 先绑定自己再
-				userss.add(user);
-				// 再绑定其他人
-				for (String re : receiver) {
-					System.out.println(re);
-					User user2 = userDao.findId(re);
-					if (user2 == null) {
-					} else
-						userss.add(user2);
-				}
+                    String[] receiver = receivers.split(";");
+                    // 先绑定自己再
+                    userss.add(user);
+                    // 再绑定其他人
+                    for (String re : receiver) {
+                        System.out.println(re);
+                        User user2 = userDao.findId(re);
+                        if (user2 == null) {
+                        } else
+                            userss.add(user2);
+                    }
 
-			} else {
-				// 保存为该用户的笔记 绑定用户id
-				userss = new HashSet<>();
-				userss.add(user);
-			}
-			noteDao.updatecollect(catalogId, typeId, statusId, note2.getTitle(), note2.getContent(), nid);
-			}
-			request.setAttribute("success", "后台验证成功");
-		}
-		// 设置创建人
-		note.setCreatemanId(userid);
-		note.setUserss(userss);
-		noteDao.save(note);
-		request.setAttribute("note2", note2);
-
+                } else {
+                    // 保存为该用户的笔记 绑定用户id
+                    userss = new HashSet<>();
+                    userss.add(user);
+                }
+                noteDao.updatecollect(catalogId, typeId, statusId, note2.getTitle(), note2.getContent(), nid);
+            }
+            request.setAttribute("success", "后台验证成功");
+        }
+        // 设置创建人
+        note.setCreatemanId(userid);
+        note.setUserss(userss);
+        noteDao.save(note);
+        request.setAttribute("note2", note2);
 
 
     }
@@ -226,14 +529,14 @@ public class NoteServiceImpl implements NoteService {
     public void collect(Model model, HttpServletRequest request, HttpSession session, int page, String baseKey, String type, String status, String time, String icon) {
 
         Long userid = Long.valueOf(String.valueOf(session.getAttribute("userId")));
-		String id = request.getParameter("id");
-		String iscollected = request.getParameter("iscollected");
+        String id = request.getParameter("id");
+        String iscollected = request.getParameter("iscollected");
         noteDao.updatecollect(Long.parseLong(iscollected), Long.parseLong(id));
-		setSomething(baseKey, type, status, time, icon,model,null,null);
-		Page<Note> upage=sortpage(page, null, userid, null, null, null, type, status, time);
-		model.addAttribute("url", "notewrite");
-		paging(model, upage);
-		model.addAttribute("sort", "&userid="+userid);
+        setSomething(baseKey, type, status, time, icon, model, null, null);
+        Page<Note> upage = sortpage(page, null, userid, null, null, null, type, status, time);
+        model.addAttribute("url", "notewrite");
+        paging(model, upage);
+        model.addAttribute("sort", "&userid=" + userid);
         typestatus(request);
 
     }

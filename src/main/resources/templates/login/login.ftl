@@ -107,6 +107,8 @@
         .modal-error .icon {
             color: #f27474;
             border: 3px solid #f27474;
+
+        }
     </style>
 </head>
 

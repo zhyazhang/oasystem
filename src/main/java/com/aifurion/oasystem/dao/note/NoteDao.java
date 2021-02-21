@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public interface NoteDao extends JpaRepository<Note, Long> {
 	//删除
 	@Query("delete from Note n where n.noteId=?1 ")
 	@Modifying
+	@Transactional
 	Integer delete(long noteid);
 
 	@Query("update Note n set n.catalogId=?1,n.typeId=?2,n.statusId=?3,"
