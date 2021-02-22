@@ -120,7 +120,7 @@ public class DayManageController {
 
     @RequestMapping("/mycalendarload")
     @ResponseBody
-    public List<ScheduleList> mycalendarload(@SessionAttribute("userId") Long userid, HttpServletResponse response) throws IOException {
+    public List<ScheduleList> myCalendarLoad(@SessionAttribute("userId") Long userid, HttpServletResponse response) throws IOException {
 
         return dayManageService.aboutMeSchedule(userid);
     }

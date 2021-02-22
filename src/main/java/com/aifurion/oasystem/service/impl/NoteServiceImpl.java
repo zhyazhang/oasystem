@@ -1,5 +1,6 @@
 package com.aifurion.oasystem.service.impl;
 
+import com.aifurion.oasystem.common.CommonMethods;
 import com.aifurion.oasystem.common.formVaild.BindingResultVOUtil;
 import com.aifurion.oasystem.common.formVaild.MapToList;
 import com.aifurion.oasystem.common.formVaild.ResultEnum;
@@ -85,6 +86,9 @@ public class NoteServiceImpl implements NoteService {
     @Autowired
     private PositionDao positionDao;
 
+    @Autowired
+    private CommonMethods commonMethods;
+
 
     private Attachment attachment;
     private List<Note> noteList;
@@ -140,15 +144,15 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void editNote(HttpServletRequest Request, HttpSession session, Model model, int page, int size) {
+    public void editNote(HttpServletRequest request, HttpSession session, Model model, int page, int size) {
 
         //验证的重载
-        if (!StringUtils.isEmpty(Request.getAttribute("errormess"))) {
-            Request.setAttribute("errormess", Request.getAttribute("errormess"));
-            Request.setAttribute("note", Request.getAttribute("note2"));
-        } else if (!StringUtils.isEmpty(Request.getAttribute("success"))) {
-            Request.setAttribute("success", Request.getAttribute("success"));
-            Request.setAttribute("note", Request.getAttribute("note2"));
+        if (!StringUtils.isEmpty(request.getAttribute("errormess"))) {
+            request.setAttribute("errormess", request.getAttribute("errormess"));
+            request.setAttribute("note", request.getAttribute("note2"));
+        } else if (!StringUtils.isEmpty(request.getAttribute("success"))) {
+            request.setAttribute("success", request.getAttribute("success"));
+            request.setAttribute("note", request.getAttribute("note2"));
         }
         // 目录
         long userid = Long.parseLong(String.valueOf(session.getAttribute("userId")));
@@ -163,22 +167,22 @@ public class NoteServiceImpl implements NoteService {
 
         // 用户 就是联系人
         List<User> users = (List<User>) userDao.findAll();
-        String nId = Request.getParameter("id");
+        String nId = request.getParameter("id");
         if (nId.contains("cata")) {
             //从目录编辑那里进来的
             String newnid = nId.substring(4, nId.length());
             long ca = Long.parseLong(newnid);
             Catalog cate = catalogDao.findById(ca).get();
-            Request.setAttribute("cata", cate);
-            Request.setAttribute("note", null);
-            Request.setAttribute("id", -3);
+            request.setAttribute("cata", cate);
+            request.setAttribute("note", null);
+            request.setAttribute("id", -3);
         } else {
             Long nid = Long.valueOf(nId);
             // 新建
             if (nid == -1) {
-                Request.setAttribute("note", null);
+                request.setAttribute("note", null);
                 // 新建id
-                Request.setAttribute("id", nid);
+                request.setAttribute("id", nid);
             }
 
             // 修改
@@ -186,18 +190,18 @@ public class NoteServiceImpl implements NoteService {
                 Note note = noteDao.findById(nid).get();
                 long ca = note.getCatalogId();
                 Catalog cate = catalogDao.findById(ca).get();
-                Request.setAttribute("cata", cate);
-                Request.setAttribute("note", note);
+                request.setAttribute("cata", cate);
+                request.setAttribute("note", note);
                 // 修改id
-                Request.setAttribute("id", nid);
+                request.setAttribute("id", nid);
             }
             // Request.setAttribute("id", nid);
         }
         userget(page, size, model);
 
-        Request.setAttribute("users", users);
-        Request.setAttribute("calist", cataloglist);
-        typestatus(Request);
+        request.setAttribute("users", users);
+        request.setAttribute("calist", cataloglist);
+        commonMethods.setTypeStatus(request, "aoa_note_list", "aoa_note_list");
 
     }
 
@@ -235,7 +239,7 @@ public class NoteServiceImpl implements NoteService {
             model.addAttribute("url", "notecata");
             ////为-2就是按照最近查找
         }
-        typestatus(request);
+        commonMethods.setTypeStatus(request, "aoa_note_list", "aoa_note_list");
 
 
     }
@@ -257,7 +261,7 @@ public class NoteServiceImpl implements NoteService {
         request.setAttribute("sort2", "&id=" + cid + "&typeid=" + tid);
         paging(model, upage);
         model.addAttribute("url", "notetype");
-        typestatus(request);
+        commonMethods.setTypeStatus(request, "aoa_note_list", "aoa_note_list");
 
 
     }
@@ -269,7 +273,7 @@ public class NoteServiceImpl implements NoteService {
 
         setSomething(baseKey, type, status, time, icon, model, null, null);
         Page<Note> upage = sortpage(page, baseKey, userid, null, null, null, type, status, time);
-        typestatus(request);
+        commonMethods.setTypeStatus(request, "aoa_note_list", "aoa_note_list");
         if (baseKey != null) {
             //如果有搜索关键字那么就记住它
             request.setAttribute("sort", "&baseKey=" + baseKey);
@@ -461,7 +465,7 @@ public class NoteServiceImpl implements NoteService {
                     for (String re : receiver) {
                         User user2 = userDao.findId(re);
                         if (user2 != null) {
-                             userss.add(user2);
+                            userss.add(user2);
                         }
 
                     }
@@ -535,7 +539,7 @@ public class NoteServiceImpl implements NoteService {
         model.addAttribute("url", "notewrite");
         paging(model, upage);
         model.addAttribute("sort", "&userid=" + userid);
-        typestatus(request);
+        commonMethods.setTypeStatus(request, "aoa_note_list", "aoa_note_list");
 
     }
 
@@ -571,7 +575,7 @@ public class NoteServiceImpl implements NoteService {
             model.addAttribute("collect", 1);
         }
 
-        typestatus(request);
+        commonMethods.setTypeStatus(request, "aoa_note_list", "aoa_note_list");
 
     }
 
@@ -586,7 +590,8 @@ public class NoteServiceImpl implements NoteService {
         Page<Note> upage = sortpage(page, baseKey, userid, null, null, null, type, status, time);
         model.addAttribute("sort", "&userid=" + userid);
         paging(model, upage);
-        typestatus(request);
+
+        commonMethods.setTypeStatus(request, "aoa_note_list", "aoa_note_list");
         model.addAttribute("url", "notewrite");
         model.addAttribute("calist", cataloglist);
     }
@@ -635,14 +640,6 @@ public class NoteServiceImpl implements NoteService {
         model.addAttribute("nlist", upage.getContent());
         model.addAttribute("page", upage);
 //		model.addAttribute("url", "notewrite");
-    }
-
-
-    private void typestatus(HttpServletRequest request) {
-        typeLists = (List<SystemTypeList>) typeDao.findByTypeModel("aoa_note_list");
-        statusLists = (List<SystemStatusList>) statusDao.findByStatusModel("aoa_note_list");
-        request.setAttribute("typelist", typeLists);
-        request.setAttribute("statuslist", statusLists);
     }
 
 

@@ -1,5 +1,6 @@
 package com.aifurion.oasystem.service.impl;
 
+import com.aifurion.oasystem.common.CommonMethods;
 import com.aifurion.oasystem.config.StringtoDate;
 import com.aifurion.oasystem.dao.attendce.AttendceDao;
 import com.aifurion.oasystem.dao.system.StatusDao;
@@ -58,6 +59,9 @@ public class AttendceServiceImpl implements AttendceService {
 
     DefaultConversionService service = new DefaultConversionService();
 
+    @Autowired
+    private CommonMethods commonMethods;
+
 
     @Override
     public void attendcePage(HttpServletRequest request, HttpSession session,
@@ -89,9 +93,13 @@ public class AttendceServiceImpl implements AttendceService {
                                 String time,
                                 String icon) {
         Long userid = Long.valueOf(String.valueOf(session.getAttribute("userId")));
-        setSomething(baseKey, type, status, time, icon, model);
+        CommonMethods.setSomething(baseKey, type, status, time, icon, model);
         Page<Attends> page2 = singleUserPage(page, baseKey, userid, type, status, time);
-        typestatus(request);
+
+
+        commonMethods.setTypeStatus(request,"aoa_attends_list","aoa_attends_list");
+
+
         request.setAttribute("alist", page2.getContent());
         for (Attends attends : page2.getContent()) {
             System.out.println(attends);
@@ -262,56 +270,16 @@ public class AttendceServiceImpl implements AttendceService {
     }
 
 
-    public void setSomething(String baseKey, Object type, Object status, Object time, Object icon, Model model) {
-        if (!StringUtils.isEmpty(icon)) {
-            model.addAttribute("icon", icon);
-            if (!StringUtils.isEmpty(type)) {
-                model.addAttribute("type", type);
-                if ("1".equals(type)) {
-                    model.addAttribute("sort", "&type=1&icon=" + icon);
-                } else {
-                    model.addAttribute("sort", "&type=0&icon=" + icon);
-                }
-            }
-            if (!StringUtils.isEmpty(status)) {
-                model.addAttribute("status", status);
-                if ("1".equals(status)) {
-                    model.addAttribute("sort", "&status=1&icon=" + icon);
-                } else {
-                    model.addAttribute("sort", "&status=0&icon=" + icon);
-                }
-            }
-            if (!StringUtils.isEmpty(time)) {
-                model.addAttribute("time", time);
-                if ("1".equals(time)) {
-                    model.addAttribute("sort", "&time=1&icon=" + icon);
-                } else {
-                    model.addAttribute("sort", "&time=0&icon=" + icon);
-                }
-            }
-        }
-        if (!StringUtils.isEmpty(baseKey)) {
-            model.addAttribute("sort", "&baseKey=" + baseKey);
-        }
-
-    }
 
 
-    @Override
-    public void typestatus(HttpServletRequest request) {
-        List<SystemTypeList> type = (List<SystemTypeList>) typeDao.findByTypeModel("aoa_attends_list");
-        List<SystemStatusList> status = (List<SystemStatusList>) statusDao.findByStatusModel("aoa_attends_list");
-        request.setAttribute("typelist", type);
-        request.setAttribute("statuslist", status);
-    }
 
     //单个用户的排序和分页
     private void signsortpaging(HttpServletRequest request, Model model, HttpSession session, int page, String baseKey,
                                 String type, String status, String time, String icon) {
         Long userid = Long.valueOf(String.valueOf(session.getAttribute("userId")));
-        setSomething(baseKey, type, status, time, icon, model);
+        commonMethods.setSomething(baseKey, type, status, time, icon, model);
         Page<Attends> page2 = singlepage(page, baseKey, userid, type, status, time);
-        typestatus(request);
+        commonMethods.setTypeStatus(request,"aoa_attends_list","aoa_attends_list");
         request.setAttribute("alist", page2.getContent());
         request.setAttribute("page", page2);
         request.setAttribute("url", "attendcelisttable");
@@ -358,7 +326,7 @@ public class AttendceServiceImpl implements AttendceService {
     @Override
     public void allsortpaging(HttpServletRequest request, HttpSession session, int page, String baseKey, String type,
                               String status, String time, String icon, Model model) {
-        setSomething(baseKey, type, status, time, icon, model);
+        CommonMethods.setSomething(baseKey, type, status, time, icon, model);
         Long userId = Long.parseLong(String.valueOf(session.getAttribute("userId")));
         List<Long> ids = new ArrayList<>();
         List<User> users = userDao.findByFatherId(userId);
@@ -369,7 +337,7 @@ public class AttendceServiceImpl implements AttendceService {
             ids.add(0L);
         }
         User user = userDao.findById(userId).get();
-        typestatus(request);
+        commonMethods.setTypeStatus(request,"aoa_attends_list","aoa_attends_list");
         Page<Attends> page2 = paging(page, baseKey, ids, type, status, time);
         request.setAttribute("alist", page2.getContent());
         request.setAttribute("page", page2);

@@ -1,5 +1,6 @@
 package com.aifurion.oasystem.controller.attendce;
 
+import com.aifurion.oasystem.common.CommonMethods;
 import com.aifurion.oasystem.entity.attendce.Attends;
 import com.aifurion.oasystem.entity.system.SystemStatusList;
 import com.aifurion.oasystem.service.AttendceService;
@@ -27,6 +28,9 @@ public class AttendceController {
 
     @Autowired
     private StatusService statusService;
+
+    @Autowired
+    private CommonMethods commonMethods;
 
 
     /**
@@ -157,7 +161,7 @@ public class AttendceController {
 
 
     @RequestMapping("/attendceedit")
-    public String test4(@Param("aid") String aid, Model model, HttpServletRequest request, HttpSession session) {
+    public String editAttendance(@Param("aid") String aid, Model model, HttpServletRequest request, HttpSession session) {
         Long userid = Long.valueOf(session.getAttribute("userId") + "");
         if (aid == null) {
             model.addAttribute("write", 0);
@@ -167,17 +171,17 @@ public class AttendceController {
             model.addAttribute("write", 1);
             model.addAttribute("attends", attends);
         }
-        attendceService.typestatus(request);
+        commonMethods.setTypeStatus(request,"aoa_attends_list","aoa_attends_list");
         return "attendce/attendceedit";
     }
 
 
     @RequestMapping("/attendceedit2")
-    public String DSAGen(HttpServletRequest request) {
+    public String editAttendance2(HttpServletRequest request) {
         long id = Long.parseLong(request.getParameter("id"));
         Attends attends = attendceService.findOne(id);
         request.setAttribute("attends", attends);
-        attendceService.typestatus(request);
+        commonMethods.setTypeStatus(request,"aoa_attends_list","aoa_attends_list");
         return "attendce/attendceedit2";
     }
 

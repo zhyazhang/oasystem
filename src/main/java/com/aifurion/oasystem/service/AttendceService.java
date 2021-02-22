@@ -43,7 +43,6 @@ public interface AttendceService {
 
     Integer delete(long aid);
 
-    void typestatus(HttpServletRequest request);
 
     Attends findOne(Long id);
 
