@@ -119,7 +119,7 @@ public class IndexServiceImpl implements IndexService {
 
         menuSysService.findMenuSys(request, user);
 
-        List<ScheduleList> aboutmeschedule = dayManageService.aboutmeschedule(userId);
+        List<ScheduleList> aboutmeschedule = dayManageService.aboutMeSchedule(userId);
 
         for (ScheduleList schedule : aboutmeschedule) {
 
