@@ -41,38 +41,17 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public LoginStateEnum loginCheck(HttpServletRequest request, String userName, String password, String code) {
 
-
-        System.out.println(userName+"  "+password+"  "+code);
         HttpSession session = request.getSession();
         String ip = "";
-
-
-        /**
-         *
-         * 测试关闭验证码
-         */
-
-        /*
-        String sessionCode = ((String) session.getAttribute(captcha)).toLowerCase();
-
-
-
-        if (!(code.toLowerCase()).equals(sessionCode)) {
-
-            System.out.println("验证码输入错误");
-            return LoginStateEnum.codeError;
-        }*/
 
         User user = userDao.findOneUser(userName, password);
         if (Objects.isNull(user)) {
 
-            System.out.println("帐号或者密码错误");
             return LoginStateEnum.notMatch;
 
         }
 
         if (user.getIsLock() == 1) {
-            System.out.println("帐号被冻结");
 
             return LoginStateEnum.userLocked;
 
@@ -82,7 +61,6 @@ public class LoginServiceImpl implements LoginService {
 
         if (sessionId == user.getUserId()) {
 
-            System.out.println("已经登录");
             session.setAttribute("thisuser", user);
             return LoginStateEnum.hasLogin;
 

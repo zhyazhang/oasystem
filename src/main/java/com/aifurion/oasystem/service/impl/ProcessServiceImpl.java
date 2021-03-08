@@ -208,7 +208,6 @@ public class ProcessServiceImpl implements ProcessService {
      */
 
     public Map<String, Object> index3(String name, User user, String typename, ProcessList process) {
-        System.out.println(name);
         Map<String, Object> result = new HashMap<>();
         String harryname = tydao.findname(process.getDeeply());
         result.put("proId", process.getProcessId());
@@ -332,9 +331,6 @@ public class ProcessServiceImpl implements ProcessService {
         revie.setProId(pro);
         redao.save(revie);
     }
-
-
-
 
 
 }

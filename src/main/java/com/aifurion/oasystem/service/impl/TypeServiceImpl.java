@@ -44,15 +44,12 @@ public class TypeServiceImpl implements TypeService {
 		}else {
 			// 判断是否从编辑界面进来的，前面有"session.setAttribute("getId",getId);",在这里获取，并remove掉；
 			if (!StringUtils.isEmpty(session.getAttribute("typeid"))) {
-				System.out.println(session.getAttribute("typeid"));
 				menuId = (Long) session.getAttribute("typeid"); // 获取进入编辑界面的menuID值
 				menu.setTypeId(menuId);
-
 				session.removeAttribute("typeid");
 			}
 			// 执行业务代码
             typeDao.save(menu);
-
 			req.setAttribute("success", "后台验证成功");
 		}
 
@@ -65,7 +62,6 @@ public class TypeServiceImpl implements TypeService {
     public Iterable<SystemTypeList> findAll() {
 
         Iterable<SystemTypeList> typeLists = typeDao.findAll();
-
         return typeLists;
     }
 

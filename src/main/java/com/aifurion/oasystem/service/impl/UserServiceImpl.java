@@ -162,7 +162,6 @@ public class UserServiceImpl implements UserService {
         if (StringUtil.isEmpty(usersearch)) {
             userspage = userDao.findByIsLock(0, pa);
         } else {
-            System.out.println(usersearch);
             userspage = userDao.findNameLike(usersearch, pa);
         }
         List<User> users = userspage.getContent();

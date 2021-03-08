@@ -639,7 +639,6 @@ public class MailManageServiceImpl implements MailManageService {
             }
 
         } else {
-            System.out.println("222");
             if (StringUtil.isEmpty(name)) {
                 //查看用户并分页
                 pageuser = userDao.findAll(pa);
@@ -722,9 +721,7 @@ public class MailManageServiceImpl implements MailManageService {
         String filetype = null;
         if (!Objects.isNull(mail.getMailFileid())) {
             String filepath = mail.getMailFileid().getAttachmentPath();
-            System.out.println(filepath);
             if (mail.getMailFileid().getAttachmentType().startsWith("image")) {
-
                 filetype = "img";
             } else {
                 filetype = "appli";

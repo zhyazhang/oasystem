@@ -764,16 +764,16 @@ public class ProcedureServiceImpl implements ProcedureService {
 
     @Override
     public String dele(HttpServletRequest req, Long userId, Model model) {
-            User lu=userDao.findById(userId).get();//审核人
-			Long proid=Long.parseLong(req.getParameter("id"));
-			Reviewed rev=reviewedDao.findByProIdAndUserId(proid, lu);
-			if(!Objects.isNull(rev)){
-				rev.setDel(true);
-				reviewedDao.save(rev);
-			}else{
-				return "common/proce";
-			}
-			return "redirect:/audit";
+        User lu = userDao.findById(userId).get();//审核人
+        Long proid = Long.parseLong(req.getParameter("id"));
+        Reviewed rev = reviewedDao.findByProIdAndUserId(proid, lu);
+        if (!Objects.isNull(rev)) {
+            rev.setDel(true);
+            reviewedDao.save(rev);
+        } else {
+            return "common/proce";
+        }
+        return "redirect:/audit";
     }
 
     @Override
@@ -781,15 +781,15 @@ public class ProcedureServiceImpl implements ProcedureService {
 
 
         try {
-				Attachment attd = attachmentDao.findById(fileid).get();
-				File file = new File(rootpath,attd.getAttachmentPath());
-				response.setContentLength(attd.getAttachmentSize().intValue());
-				response.setContentType(attd.getAttachmentType());
-				response.setHeader("Content-Disposition","attachment;filename=" + new String(attd.getAttachmentName().getBytes("UTF-8"), "ISO8859-1"));
-				processService.writefile(response, file);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            Attachment attd = attachmentDao.findById(fileid).get();
+            File file = new File(rootpath, attd.getAttachmentPath());
+            response.setContentLength(attd.getAttachmentSize().intValue());
+            response.setContentType(attd.getAttachmentType());
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String(attd.getAttachmentName().getBytes("UTF-8"), "ISO8859-1"));
+            processService.writefile(response, file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -804,17 +804,15 @@ public class ProcedureServiceImpl implements ProcedureService {
 
             String startpath = new String(URLDecoder.decode(request.getRequestURI(), "utf-8"));
 
-			String path = startpath.replace("/show", "");
+            String path = startpath.replace("/show", "");
 
-			File f = new File(rootpath, path);
-			System.out.println(f.getAbsolutePath());
-			sos = response.getOutputStream();
-			input = new FileInputStream(f.getPath());
-			byte[] data = new byte[(int) f.length()];
-			IOUtils.readFully(input, data);
-			// 将文件流输出到浏览器
-			IOUtils.write(data, sos);
-
+            File f = new File(rootpath, path);
+            sos = response.getOutputStream();
+            input = new FileInputStream(f.getPath());
+            byte[] data = new byte[(int) f.length()];
+            IOUtils.readFully(input, data);
+            // 将文件流输出到浏览器
+            IOUtils.write(data, sos);
 
 
         } catch (Exception e) {

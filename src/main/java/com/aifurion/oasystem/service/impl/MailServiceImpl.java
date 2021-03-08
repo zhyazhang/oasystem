@@ -80,10 +80,9 @@ public class MailServiceImpl implements MailService {
 
         try {
             rootpath = ResourceUtils.getURL("classpath:").getPath().replace("/target/classes/", "/static/attachment");
-            //System.out.println(rootpath);
-
         } catch (IOException e) {
-            System.out.println("获取项目路径异常");
+            e.printStackTrace();
+
         }
 
     }

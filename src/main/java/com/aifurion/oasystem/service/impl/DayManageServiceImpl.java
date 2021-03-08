@@ -66,7 +66,6 @@ public class DayManageServiceImpl implements DayManageService {
     public void addAndChangeDay(ScheduleList scheduleList, String shareUser, BindingResult br, Long userid) {
 
         User user = userDao.findById(userid).get();
-        System.out.println(shareUser);
         List<User> users = new ArrayList<>();
 
         StringTokenizer st = new StringTokenizer(shareUser, ";");

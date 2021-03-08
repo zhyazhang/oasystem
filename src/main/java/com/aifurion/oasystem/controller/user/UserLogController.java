@@ -88,7 +88,6 @@ public class UserLogController {
             list.add(sdf.format(scheduleList.getStartTime()));
         }
         String json = JSONObject.toJSONString(list);
-        System.out.println(json);
         response.setHeader("Cache-Control", "no-cache");
         response.setContentType("text/json;charset=UTF-8");
         response.getWriter().write(json);

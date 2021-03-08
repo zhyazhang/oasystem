@@ -501,11 +501,10 @@ public class NoteServiceImpl implements NoteService {
                     userss.add(user);
                     // 再绑定其他人
                     for (String re : receiver) {
-                        System.out.println(re);
                         User user2 = userDao.findId(re);
-                        if (user2 == null) {
-                        } else
+                        if (user2 != null) {
                             userss.add(user2);
+                        }
                     }
 
                 } else {
@@ -665,8 +664,6 @@ public class NoteServiceImpl implements NoteService {
 
         if (!StringUtils.isEmpty(typeId)) {
             if (!StringUtils.isEmpty(typeId) && !StringUtils.isEmpty(catalogId)) {
-                System.out.println("目录类型");
-
                 //根据目录 然后再根据类型查找
                 if (!StringUtils.isEmpty(type)) {
                     if (type.toString().equals("0"))
@@ -689,7 +686,6 @@ public class NoteServiceImpl implements NoteService {
                 } else return noteDao.findByTypeIdOrderByCreateTimeDesc(typeId, catalogId, userid, pa);
             }
             if (!StringUtils.isEmpty(typeId) && StringUtils.isEmpty(catalogId)) {
-                System.out.println("单纯类型");
                 //为空就直接按照类型查找
 
                 if (!StringUtils.isEmpty(type)) {
@@ -753,7 +749,6 @@ public class NoteServiceImpl implements NoteService {
             }
             if (!StringUtils.isEmpty(time)) {
                 if (time.toString().equals("0")) {
-                    System.out.println("时间" + time);
                     return noteDao.findByUserssOrderByCreateTimeDesc(userid, pa);
                 } else {
                     return noteDao.findByUserssOrderByCreateTimeAsc(userid, pa);
@@ -763,7 +758,6 @@ public class NoteServiceImpl implements NoteService {
         if (!StringUtils.isEmpty(userid)) {
             return noteDao.findByUserssOrderByCreateTimeDesc(userid, pa);
         } else {
-            System.out.println("what");
             // 第几页 以及页里面数据的条数
             return noteDao.findByUserss(userid, pa);
         }

@@ -56,10 +56,7 @@ public class InformServiceImpl implements InformService {
         List<NoticeUserRelation> relationList = informRelationDao.findByNoticeId(noticesList);
 
         informRelationDao.deleteAll(relationList);
-
         informDao.deleteById(noticeId);
-        System.out.println("删除成功");
-
 
     }
 
@@ -68,18 +65,18 @@ public class InformServiceImpl implements InformService {
 
 
         List<Map<String, Object>> list = new ArrayList<>();
-		for (int i = 0; i < noticelist.size(); i++) {
+		for (NoticesList noticesList : noticelist) {
 			Map<String, Object> result = new HashMap<>();
-			result.put("noticeId", noticelist.get(i).getNoticeId());
-			result.put("typename", typeDao.findname(noticelist.get(i).getTypeId()));
-			result.put("statusname", statusDao.findname(noticelist.get(i).getStatusId()));
-			result.put("statuscolor", statusDao.findcolor(noticelist.get(i).getStatusId()));
-			result.put("title", noticelist.get(i).getTitle());
-			result.put("noticeTime", noticelist.get(i).getNoticeTime());
-			result.put("top", noticelist.get(i).getTop());
-			result.put("url", noticelist.get(i).getUrl());
-			result.put("username", userDao.findById(noticelist.get(i).getUserId()).get().getUserName());
-			result.put("deptname", userDao.findById(noticelist.get(i).getUserId()).get().getDept().getDeptName());
+			result.put("noticeId", noticesList.getNoticeId());
+			result.put("typename", typeDao.findname(noticesList.getTypeId()));
+			result.put("statusname", statusDao.findname(noticesList.getStatusId()));
+			result.put("statuscolor", statusDao.findcolor(noticesList.getStatusId()));
+			result.put("title", noticesList.getTitle());
+			result.put("noticeTime", noticesList.getNoticeTime());
+			result.put("top", noticesList.getTop());
+			result.put("url", noticesList.getUrl());
+			result.put("username", userDao.findById(noticesList.getUserId()).get().getUserName());
+			result.put("deptname", userDao.findById(noticesList.getUserId()).get().getDept().getDeptName());
 			list.add(result);
 		}
 		return list;
@@ -147,7 +144,6 @@ public class InformServiceImpl implements InformService {
 
 			return informDao.findByBaseKey(userId, key,pa);
 		}
-		System.out.println("orders:"+orders);
 		if(orders.size()>0){
 			Sort sort = Sort.by(orders);
 			 pa= PageRequest.of(page, size, sort);

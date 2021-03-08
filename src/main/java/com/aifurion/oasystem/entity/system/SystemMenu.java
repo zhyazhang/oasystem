@@ -49,7 +49,6 @@ public class SystemMenu {
 	public SystemMenu(Long menuId, Long parentId, String menuName, String menuUrl, String menuIcon, Integer sortId,
 			Boolean show, Integer menuGrade) {
 		super();
-		System.out.println("parentId"+parentId);
 		if(parentId!=null){
 			
 			this.parentId = parentId;

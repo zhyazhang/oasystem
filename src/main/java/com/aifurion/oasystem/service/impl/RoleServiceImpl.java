@@ -121,13 +121,7 @@ public class RoleServiceImpl implements RoleService {
         String content = req.getParameter("content").trim();
         Long menuid = Long.parseLong(req.getParameter("menuid"));
         Rolepowerlist rolepower = rolepowerListDao.findByRoleIdAndMenuId(roleid, menuid);
-        System.out.println(rolepower);
-        if ("选中".equals(content)) {
-            rolepower.setCheck(true);
-        } else {
-            rolepower.setCheck(false);
-        }
-
+        rolepower.setCheck("选中".equals(content));
         rolepowerListDao.save(rolepower);
         return true;
     }

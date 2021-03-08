@@ -130,7 +130,6 @@ public class Tool {
     public static String numbertocn(Double money) {
         BigDecimal numberOfMoney = new BigDecimal(money);
         String s = number2CNMontrayUnit(numberOfMoney);
-        System.out.println("你输入的金额为：【" + money + "】   #--# [" + s.toString() + "]");
         return s.toString();
     }
 

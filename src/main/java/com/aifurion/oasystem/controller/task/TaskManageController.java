@@ -359,7 +359,6 @@ public class TaskManageController {
         Long ustatus = taskManageService.findStatusByUserIdAndTaskId(userId, ltaskid);
 
         SystemStatusList status = statusService.findOne(ustatus);
-        /*System.out.println(status);*/
 
         // 查看发布人
         User user = userService.findOne(task.getUsersId().getUserId());

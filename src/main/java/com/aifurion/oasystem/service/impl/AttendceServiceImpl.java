@@ -83,27 +83,14 @@ public class AttendceServiceImpl implements AttendceService {
 
 
     @Override
-    public void getAttendceList(HttpServletRequest request,
-                                Model model,
-                                HttpSession session,
-                                int page,
-                                String baseKey,
-                                String type,
-                                String status,
-                                String time,
-                                String icon) {
+    public void getAttendceList(HttpServletRequest request, Model model,
+                                HttpSession session, int page, String baseKey,
+                                String type, String status, String time, String icon) {
         Long userid = Long.valueOf(String.valueOf(session.getAttribute("userId")));
         CommonMethods.setSomething(baseKey, type, status, time, icon, model);
         Page<Attends> page2 = singleUserPage(page, baseKey, userid, type, status, time);
-
-
-        commonMethods.setTypeStatus(request,"aoa_attends_list","aoa_attends_list");
-
-
+        commonMethods.setTypeStatus(request, "aoa_attends_list", "aoa_attends_list");
         request.setAttribute("alist", page2.getContent());
-        for (Attends attends : page2.getContent()) {
-            System.out.println(attends);
-        }
         request.setAttribute("page", page2);
         request.setAttribute("url", "attendcelisttable");
 
@@ -117,7 +104,6 @@ public class AttendceServiceImpl implements AttendceService {
         //0为降序 1为升序
         if (!StringUtils.isEmpty(baseKey)) {
             // 查询
-            System.out.println(baseKey);
             attendceDao.findonemohu(baseKey, userid, pa);
         }
         if (!StringUtils.isEmpty(type)) {
@@ -186,20 +172,16 @@ public class AttendceServiceImpl implements AttendceService {
 
         // 时分秒
         String hourminsec = sdf5.format(date);
-        //System.out.println("星期" + weekofday + "时分" + hourmin + "时分秒" + hourminsec);
-        //System.out.println(date);
         Long aid = null;
 
         // 查找用户当天的所有记录
         Integer count = attendceDao.countrecord(nowdate, userId);
         if (hourminsec.compareTo(end) > 0) {
             // 在17之后签到无效
-            System.out.println("----不能签到");
             model.addAttribute("error", "1");
         }
         if (hourminsec.compareTo("05:00:00") < 0) {
             //在凌晨5点之前不能签到
-            System.out.println("----不能签到");
             model.addAttribute("error", "2");
         } else if ((hourminsec.compareTo("05:00:00") > 0) && (hourminsec.compareTo(end) < 0)) {
             // 明确一点就是一个用户一天只能产生两条记录
@@ -270,16 +252,13 @@ public class AttendceServiceImpl implements AttendceService {
     }
 
 
-
-
-
     //单个用户的排序和分页
     private void signsortpaging(HttpServletRequest request, Model model, HttpSession session, int page, String baseKey,
                                 String type, String status, String time, String icon) {
         Long userid = Long.valueOf(String.valueOf(session.getAttribute("userId")));
         commonMethods.setSomething(baseKey, type, status, time, icon, model);
         Page<Attends> page2 = singlepage(page, baseKey, userid, type, status, time);
-        commonMethods.setTypeStatus(request,"aoa_attends_list","aoa_attends_list");
+        commonMethods.setTypeStatus(request, "aoa_attends_list", "aoa_attends_list");
         request.setAttribute("alist", page2.getContent());
         request.setAttribute("page", page2);
         request.setAttribute("url", "attendcelisttable");
@@ -290,7 +269,6 @@ public class AttendceServiceImpl implements AttendceService {
         //0为降序 1为升序
         if (!StringUtils.isEmpty(baseKey)) {
             // 查询
-            System.out.println(baseKey);
             attendceDao.findonemohu(baseKey, userid, pa);
         }
         if (!StringUtils.isEmpty(type)) {
@@ -337,7 +315,7 @@ public class AttendceServiceImpl implements AttendceService {
             ids.add(0L);
         }
         User user = userDao.findById(userId).get();
-        commonMethods.setTypeStatus(request,"aoa_attends_list","aoa_attends_list");
+        commonMethods.setTypeStatus(request, "aoa_attends_list", "aoa_attends_list");
         Page<Attends> page2 = paging(page, baseKey, ids, type, status, time);
         request.setAttribute("alist", page2.getContent());
         request.setAttribute("page", page2);
@@ -356,7 +334,6 @@ public class AttendceServiceImpl implements AttendceService {
                 //降序
                 return attendceDao.findByUserOrderByTypeIdDesc(user, pa);
             } else {
-                System.out.println("22");
                 //升序
                 return attendceDao.findByUserOrderByTypeIdAsc(user, pa);
             }
@@ -386,24 +363,24 @@ public class AttendceServiceImpl implements AttendceService {
 
 
         String starttime = request.getParameter("starttime");
-		String endtime = request.getParameter("endtime");
-		// 格式转化
-		service.addConverter(new StringtoDate());
-		Date startdate = service.convert(starttime, Date.class);
-		Date enddate = service.convert(endtime, Date.class);
+        String endtime = request.getParameter("endtime");
+        // 格式转化
+        service.addConverter(new StringtoDate());
+        Date startdate = service.convert(starttime, Date.class);
+        Date enddate = service.convert(endtime, Date.class);
 
-		//用来查找该用户下面管理的所有用户信息
-		Long userId = Long.parseLong(String.valueOf(session.getAttribute("userId")));
-		List<Long> ids = new ArrayList<>();
-		Page<User> userspage =userService.findMyEmployUser(page, baseKey, userId);
-		for (User user : userspage) {
-			ids.add(user.getUserId());
-		}
-		if (ids.size() == 0) {
-			ids.add(0L);
-		}
+        //用来查找该用户下面管理的所有用户信息
+        Long userId = Long.parseLong(String.valueOf(session.getAttribute("userId")));
+        List<Long> ids = new ArrayList<>();
+        Page<User> userspage = userService.findMyEmployUser(page, baseKey, userId);
+        for (User user : userspage) {
+            ids.add(user.getUserId());
+        }
+        if (ids.size() == 0) {
+            ids.add(0L);
+        }
 
-		//找到某个管理员下面的所有用户的信息 保证传过来的是正确的数据 分页之后可以使用全局变量来记住开始和结束日期
+        //找到某个管理员下面的所有用户的信息 保证传过来的是正确的数据 分页之后可以使用全局变量来记住开始和结束日期
         if (startdate != null && enddate != null) {
 
             start = startdate;
@@ -413,21 +390,21 @@ public class AttendceServiceImpl implements AttendceService {
 
             startdate = start;
         }
-        enddate=end;
-		List<Attends> alist = attendceDao.findoneweek(startdate, enddate, ids);
-		Set<Attends> attenceset = new HashSet<>();
-		for (User user : userspage) {
-			for (Attends attence : alist) {
-				if (Objects.equals(attence.getUser().getUserId(), user.getUserId())) {
-					attenceset.add(attence);
-				}
-			}
-			user.setaSet(attenceset);
-		}
-		String[] weekday = { "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日" };
-		request.setAttribute("ulist", userspage.getContent());
-		request.setAttribute("page", userspage);
-		request.setAttribute("weekday", weekday);
+        enddate = end;
+        List<Attends> alist = attendceDao.findoneweek(startdate, enddate, ids);
+        Set<Attends> attenceset = new HashSet<>();
+        for (User user : userspage) {
+            for (Attends attence : alist) {
+                if (Objects.equals(attence.getUser().getUserId(), user.getUserId())) {
+                    attenceset.add(attence);
+                }
+            }
+            user.setaSet(attenceset);
+        }
+        String[] weekday = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
+        request.setAttribute("ulist", userspage.getContent());
+        request.setAttribute("page", userspage);
+        request.setAttribute("weekday", weekday);
         request.setAttribute("url", "realweektable");
 
 
@@ -438,72 +415,72 @@ public class AttendceServiceImpl implements AttendceService {
     public void monthtablepaging(HttpServletRequest request, Model model, HttpSession session, int page, String baseKey) {
 
 
-        Integer offnum,toworknum;
-		Long userId = Long.parseLong(session.getAttribute("userId") + "");
-		List<Long> ids = new ArrayList<>();
-		Page<User> userspage =userService.findMyEmployUser(page, baseKey, userId);
-		for (User user : userspage) {
-			ids.add(user.getUserId());
-		}
-		if (ids.size() == 0) {
-			ids.add(0L);
-		}
-		String month = request.getParameter("month");
+        Integer offnum, toworknum;
+        Long userId = Long.parseLong(session.getAttribute("userId") + "");
+        List<Long> ids = new ArrayList<>();
+        Page<User> userspage = userService.findMyEmployUser(page, baseKey, userId);
+        for (User user : userspage) {
+            ids.add(user.getUserId());
+        }
+        if (ids.size() == 0) {
+            ids.add(0L);
+        }
+        String month = request.getParameter("month");
 
-		if(month!=null) {
-            this.month=month;
+        if (month != null) {
+            this.month = month;
         } else {
-            month=this.month;
+            month = this.month;
         }
 
-		Map<String, List<Integer>> uMap = new HashMap<>();
-		List<Integer> result = null;
+        Map<String, List<Integer>> uMap = new HashMap<>();
+        List<Integer> result = null;
 
-		for (User user : userspage) {
-			result = new ArrayList<>();
-			//当月该用户下班次数
-			offnum=attendceDao.countoffwork(month, user.getUserId());
-			//当月该用户上班次数
-			toworknum=attendceDao.counttowork(month, user.getUserId());
-			for (long statusId = 10; statusId < 13; statusId++) {
-				//这里面记录了正常迟到早退等状态
-				if(statusId==12) {
-                    result.add(attendceDao.countnum(month, statusId, user.getUserId())+toworknum-offnum);
+        for (User user : userspage) {
+            result = new ArrayList<>();
+            //当月该用户下班次数
+            offnum = attendceDao.countoffwork(month, user.getUserId());
+            //当月该用户上班次数
+            toworknum = attendceDao.counttowork(month, user.getUserId());
+            for (long statusId = 10; statusId < 13; statusId++) {
+                //这里面记录了正常迟到早退等状态
+                if (statusId == 12) {
+                    result.add(attendceDao.countnum(month, statusId, user.getUserId()) + toworknum - offnum);
                 } else {
                     result.add(attendceDao.countnum(month, statusId, user.getUserId()));
                 }
-			}
-			//添加请假和出差的记录//应该是查找 使用sql的sum（）函数来统计出差和请假的次数
+            }
+            //添加请假和出差的记录//应该是查找 使用sql的sum（）函数来统计出差和请假的次数
 
-			if(attendceDao.countothernum(month, 46L, user.getUserId())!=null) {
+            if (attendceDao.countothernum(month, 46L, user.getUserId()) != null) {
                 result.add(attendceDao.countothernum(month, 46L, user.getUserId()));
             } else {
                 result.add(0);
             }
-			if(attendceDao.countothernum(month, 47L, user.getUserId())!=null) {
+            if (attendceDao.countothernum(month, 47L, user.getUserId()) != null) {
                 result.add(attendceDao.countothernum(month, 47L, user.getUserId()));
             } else {
                 result.add(0);
             }
-			//这里记录了旷工的次数 还有请假天数没有记录 旷工次数=30-8-请假次数-某天签到次数
-			//这里还有请假天数没有写
-			Date date=new Date();
-			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
-			String date_month=sdf.format(date);
-			if(month!=null){
-				if(month.compareTo(date_month)>=0) {
+            //这里记录了旷工的次数 还有请假天数没有记录 旷工次数=30-8-请假次数-某天签到次数
+            //这里还有请假天数没有写
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            String date_month = sdf.format(date);
+            if (month != null) {
+                if (month.compareTo(date_month) >= 0) {
                     result.add(0);
                 } else {
-                    result.add(30-8-offnum);
+                    result.add(30 - 8 - offnum);
                 }
-			}
+            }
 
-			uMap.put(user.getUserName(), result);
-		}
-		model.addAttribute("uMap", uMap);
-		model.addAttribute("ulist", userspage.getContent());
-		model.addAttribute("page", userspage);
-		model.addAttribute("url", "realmonthtable");
+            uMap.put(user.getUserName(), result);
+        }
+        model.addAttribute("uMap", uMap);
+        model.addAttribute("ulist", userspage.getContent());
+        model.addAttribute("page", userspage);
+        model.addAttribute("url", "realmonthtable");
 
     }
 
