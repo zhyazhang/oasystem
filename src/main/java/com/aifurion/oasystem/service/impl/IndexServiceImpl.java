@@ -1,6 +1,6 @@
 package com.aifurion.oasystem.service.impl;
 
-import com.aifurion.oasystem.dao.DayManageDao;
+import com.aifurion.oasystem.dao.day.DayManageDao;
 import com.aifurion.oasystem.dao.attendce.AttendceDao;
 import com.aifurion.oasystem.dao.discuss.DiscussDao;
 import com.aifurion.oasystem.dao.file.FileListDao;

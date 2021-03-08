@@ -375,8 +375,6 @@ public class NoteServiceImpl implements NoteService {
     public void deleteCatalogById(Long catalogId) {
 
         catalogDao.delete(catalogId);
-
-
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.aifurion.oasystem.service.impl;
 
-import com.aifurion.oasystem.dao.DayManageDao;
+import com.aifurion.oasystem.dao.day.DayManageDao;
 import com.aifurion.oasystem.dao.system.StatusDao;
 import com.aifurion.oasystem.dao.system.TypeDao;
 import com.aifurion.oasystem.dao.user.UserDao;
@@ -10,7 +10,6 @@ import com.aifurion.oasystem.entity.system.SystemTypeList;
 import com.aifurion.oasystem.entity.user.User;
 import com.aifurion.oasystem.service.DayManageService;
 import com.aifurion.oasystem.service.ProcessService;
-import com.aifurion.oasystem.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

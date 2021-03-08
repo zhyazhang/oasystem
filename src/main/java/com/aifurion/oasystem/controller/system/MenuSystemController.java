@@ -1,6 +1,5 @@
 package com.aifurion.oasystem.controller.system;
 
-import com.aifurion.oasystem.dao.IndexDao;
 import com.aifurion.oasystem.entity.system.SystemMenu;
 import com.aifurion.oasystem.service.MenuSysService;
 import org.springframework.beans.factory.annotation.Autowired;

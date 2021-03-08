@@ -4,7 +4,7 @@ import com.aifurion.oasystem.common.formVaild.BindingResultVOUtil;
 import com.aifurion.oasystem.common.formVaild.MapToList;
 import com.aifurion.oasystem.common.formVaild.ResultEnum;
 import com.aifurion.oasystem.common.formVaild.ResultVO;
-import com.aifurion.oasystem.dao.IndexDao;
+import com.aifurion.oasystem.dao.index.IndexDao;
 import com.aifurion.oasystem.dao.role.RoleDao;
 import com.aifurion.oasystem.dao.role.RolepowerListDao;
 import com.aifurion.oasystem.dao.user.UserDao;

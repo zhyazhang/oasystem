@@ -1,5 +1,8 @@
 <div class="col-md-12 green" >
-	<div class="modal fade"  id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+
+
+	<#--<div class="modal fade"  id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -28,9 +31,12 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
 				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+			</div><!-- /.modal-content &ndash;&gt;
+		</div><!-- /.modal-dialog &ndash;&gt;
+	</div><!-- /.modal &ndash;&gt;-->
+
+
+
 	<!--导航栏左侧按钮，-->
 	<ul class="nav navbar-nav navbar-left" style="margin-left: -15px;">
 		<li><a href="#" class="green-none white"><span
@@ -38,16 +44,16 @@
 	</ul>
 	<!--右侧导航栏-->
 	<ul class="nav navbar-nav navbar-right moredeep">
-		<li>
+	<#--	<li>
 			<a href="javascript:void(0)" class="green-none white" data-toggle="modal" data-target="#myModal">
 				<span class="glyphicon glyphicon glyphicon-jpy">捐赠</span>
 			</a>
-		</li>
-		<li>
-			<a href="https://github.com/Murphy1875/oasystem" target="_blank" class="green-none white">
-				<span class="glyphicon glyphicon-star">Git源码</span>
+		</li>-->
+<#--		<li>
+			<a href="https://github.com/glutinousriceball/oasystem" target="_blank" class="green-none white">
+				<span class="glyphicon glyphicon-star">源码</span>
 			</a>
-		</li>
+		</li>-->
 		<li><a href="javascript:changepath('/infromlist');" class="green-none white"><span
 				class="glyphicon glyphicon-bell"></span>
 				<#if notice==0>
