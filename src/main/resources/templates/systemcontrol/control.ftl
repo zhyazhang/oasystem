@@ -272,7 +272,7 @@
                                     </#list>
                                 </td>
                                 <td><span>${(pro.processName)!''}</span></td>
-                                <td><a class="look-xiangxi"><span
+                                <td><a class="look-xiangxi" href="particular?id=${pro.processId}&typename=${pro.typeNmae}"><span
                                                 class="glyphicon glyphicon-search"> </span> 查看 </a></td>
                             </tr>
                         </#list>
