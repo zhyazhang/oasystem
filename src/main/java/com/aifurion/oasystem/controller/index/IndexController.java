@@ -24,7 +24,6 @@ public class IndexController {
     public String index(HttpServletRequest request, Model model) {
 
         if (indexService.initIndex(request, model)) {
-
             return "login/login";
         } else {
             return "index/index";

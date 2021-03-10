@@ -13,6 +13,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import eu.bitwalker.useragentutils.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,7 +27,6 @@ import java.util.Objects;
  * @description：TODO
  * @date ：2021/1/11 21:15
  */
-
 @Service
 public class LoginServiceImpl implements LoginService {
 

@@ -185,7 +185,6 @@
 <#if errormess??>
     <script>
         $(function () {
-            console.log("fdsfdsfsfasdf");
             $('.error-mess').text('${errormess}');
             $('.alert-danger').css('display', 'block');
         })
@@ -196,7 +195,11 @@
         $(this).css('border', "1px solid transparent");
     })
     $('.contiue').on('click', function () {
+
+
         location.href = "/handlehas";
+
+
     })
 
 
@@ -204,9 +207,6 @@
         var userName = $('.userName').val().trim();
         var password = $('.password').val().trim();
         var code = $('.code').val().trim();
-        console.log(userName);
-        console.log(password);
-        console.log(code);
         var count = 1;
         if (userName == null || userName == "") {
             $('.error-mess').text("登录账号不能为空!");
@@ -229,7 +229,6 @@
             count = 0;
             return false;
         }
-        console.log(count);
         return true;
     }
 

@@ -47,6 +47,8 @@ public class LoginController {
         String sessionCode = (String) request.getSession().getAttribute(captcha);
         model.addAttribute("userName", userName);
         LoginStateEnum stateEnum = loginService.loginCheck(request, userName, password, "code");
+
+
         switch (stateEnum) {
             case codeError:
                 model.addAttribute("errormess", "验证码输入错误！");
@@ -61,6 +63,7 @@ public class LoginController {
                 model.addAttribute("hasmess", "当前用户已经登录，不能重复登录");
                 break;
             case ok:
+
                 return "redirect:/index";
             default:
                 break;

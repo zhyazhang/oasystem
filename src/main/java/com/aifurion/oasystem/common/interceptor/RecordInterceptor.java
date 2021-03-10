@@ -47,10 +47,10 @@ public class RecordInterceptor implements HandlerInterceptor {
             User user = userDao.findById(userId).get();
 
             List<Rolemenu> parentMenus = rolepowerListDao
-                    .findByParentDisplayAll(0L, user.getRole().getRoleId(), true, false);
+                    .findByParentDisplayAll(0L, user.getRole().getRoleId(), true, true);
 
             List<Rolemenu> childMenus = rolepowerListDao
-                    .findByParentsDisplay(0L, user.getRole().getRoleId(), true, false);
+                    .findByParentsDisplay(0L, user.getRole().getRoleId(), true, true);
 
             List<Rolemenu> allMenus = new ArrayList<>();
 
