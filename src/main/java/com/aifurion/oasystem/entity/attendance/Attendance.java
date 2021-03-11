@@ -1,4 +1,4 @@
-package com.aifurion.oasystem.entity.attendce;
+package com.aifurion.oasystem.entity.attendance;
 
 
 
@@ -17,7 +17,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="aoa_attends_list")
-public class Attends {
+public class Attendance {
 
 	@Id
 	@Column(name="attends_id")
@@ -150,13 +150,13 @@ public class Attends {
 		this.holidayStart = holidayStart;
 	}
 
-	public Attends() {
+	public Attendance() {
 		super();
 		// TODO Auto-generated constructor stub
 	} 
 	
 	
-	public Attends(Long typeId, Long statusId, Date attendsTime, String attendsIp, String attendsRemark, User user) {
+	public Attendance(Long typeId, Long statusId, Date attendsTime, String attendsIp, String attendsRemark, User user) {
 		super();
 		this.typeId = typeId;
 		this.statusId = statusId;
@@ -166,8 +166,8 @@ public class Attends {
 		this.user = user;
 	}
 	
-	public Attends(Long typeId, Long statusId, Date attendsTime, String attendHmtime, String weekOfday,
-			String attendsIp, User user) {
+	public Attendance(Long typeId, Long statusId, Date attendsTime, String attendHmtime, String weekOfday,
+					  String attendsIp, User user) {
 		super();
 		this.typeId = typeId;
 		this.statusId = statusId;

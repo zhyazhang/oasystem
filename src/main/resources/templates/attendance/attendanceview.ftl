@@ -111,7 +111,7 @@ color:blue;
 	<div class="row">
 		<div class="col-md-12 thistable">
 			<!--id="container"-->
-			<#include "attendcetable.ftl">
+			<#include "attendancetable.ftl">
 		</div>
 	</div>
 </body>

@@ -224,7 +224,7 @@ public class AddressController {
         addressService.outaddresspaging(page, model, baseKey, outtype, alph, userId);
 
 
-       return "address/outaddrss";
+       return "address/outaddress";
     }
 
 

@@ -1,7 +1,7 @@
 package com.aifurion.oasystem.service.impl;
 
 import com.aifurion.oasystem.dao.day.DayManageDao;
-import com.aifurion.oasystem.dao.attendce.AttendceDao;
+import com.aifurion.oasystem.dao.attendance.AttendanceDao;
 import com.aifurion.oasystem.dao.discuss.DiscussDao;
 import com.aifurion.oasystem.dao.file.FileListDao;
 import com.aifurion.oasystem.dao.inform.InformRelationDao;
@@ -15,7 +15,7 @@ import com.aifurion.oasystem.dao.system.TypeDao;
 import com.aifurion.oasystem.dao.task.TaskUserDao;
 import com.aifurion.oasystem.dao.user.UserDao;
 import com.aifurion.oasystem.dao.user.UserLogDao;
-import com.aifurion.oasystem.entity.attendce.Attends;
+import com.aifurion.oasystem.entity.attendance.Attendance;
 import com.aifurion.oasystem.entity.mail.MailReceiver;
 import com.aifurion.oasystem.entity.notice.NoticeUserRelation;
 import com.aifurion.oasystem.entity.notice.NoticesList;
@@ -90,7 +90,7 @@ public class IndexServiceImpl implements IndexService {
 
 
     @Autowired
-    private AttendceDao attendceDao;
+    private AttendanceDao attendanceDao;
 
 
     @Autowired
@@ -252,7 +252,7 @@ public class IndexServiceImpl implements IndexService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		String nowdate = sdf.format(date);
-		Attends aList = attendceDao.findlastest(nowdate, userId);
+		Attendance aList = attendanceDao.findlastest(nowdate, userId);
 		if (aList != null) {
 			String type = typeDao.findname(aList.getTypeId());
 			model.addAttribute("type", type);

@@ -2,15 +2,13 @@ package com.aifurion.oasystem.service.impl;
 
 import com.aifurion.oasystem.common.CommonMethods;
 import com.aifurion.oasystem.config.StringtoDate;
-import com.aifurion.oasystem.dao.attendce.AttendceDao;
+import com.aifurion.oasystem.dao.attendance.AttendanceDao;
 import com.aifurion.oasystem.dao.system.StatusDao;
 import com.aifurion.oasystem.dao.system.TypeDao;
 import com.aifurion.oasystem.dao.user.UserDao;
-import com.aifurion.oasystem.entity.attendce.Attends;
-import com.aifurion.oasystem.entity.system.SystemStatusList;
-import com.aifurion.oasystem.entity.system.SystemTypeList;
+import com.aifurion.oasystem.entity.attendance.Attendance;
 import com.aifurion.oasystem.entity.user.User;
-import com.aifurion.oasystem.service.AttendceService;
+import com.aifurion.oasystem.service.AttendanceService;
 import com.aifurion.oasystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.support.DefaultConversionService;
@@ -35,10 +33,10 @@ import java.util.*;
  */
 
 @Service
-public class AttendceServiceImpl implements AttendceService {
+public class AttendanceServiceImpl implements AttendanceService {
 
     @Autowired
-    private AttendceDao attendceDao;
+    private AttendanceDao attendanceDao;
 
     @Autowired
     private TypeDao typeDao;
@@ -64,78 +62,78 @@ public class AttendceServiceImpl implements AttendceService {
 
 
     @Override
-    public void attendcePage(HttpServletRequest request, HttpSession session,
+    public void attendancePage(HttpServletRequest request, HttpSession session,
                              int page, String baseKey, String type,
                              String status, String time, String icon, Model model) {
 
 
-        allsortpaging(request, session, page, baseKey, type, status, time, icon, model);
+        allSortPaging(request, session, page, baseKey, type, status, time, icon, model);
     }
 
     @Override
-    public void getAttendceListTable(HttpServletRequest request, Model model,
+    public void getAttendanceListTable(HttpServletRequest request, Model model,
                                      HttpSession session, int page, String baseKey,
                                      String type, String status, String time, String icon) {
 
-        signsortpaging(request, model, session, page, baseKey, type, status, time, icon);
+        signSortPaging(request, model, session, page, baseKey, type, status, time, icon);
 
     }
 
 
     @Override
-    public void getAttendceList(HttpServletRequest request, Model model,
+    public void getAttendanceList(HttpServletRequest request, Model model,
                                 HttpSession session, int page, String baseKey,
                                 String type, String status, String time, String icon) {
         Long userid = Long.valueOf(String.valueOf(session.getAttribute("userId")));
         CommonMethods.setSomething(baseKey, type, status, time, icon, model);
-        Page<Attends> page2 = singleUserPage(page, baseKey, userid, type, status, time);
+        Page<Attendance> page2 = singleUserPage(page, baseKey, userid, type, status, time);
         commonMethods.setTypeStatus(request, "aoa_attends_list", "aoa_attends_list");
         request.setAttribute("alist", page2.getContent());
         request.setAttribute("page", page2);
-        request.setAttribute("url", "attendcelisttable");
+        request.setAttribute("url", "attendancelisttable");
 
 
     }
 
     @Override
-    public Page<Attends> singleUserPage(int page, String baseKey, long userid, Object type, Object status, Object time) {
+    public Page<Attendance> singleUserPage(int page, String baseKey, long userid, Object type, Object status, Object time) {
 
         Pageable pa = PageRequest.of(page, 10);
         //0为降序 1为升序
         if (!StringUtils.isEmpty(baseKey)) {
             // 查询
-            attendceDao.findonemohu(baseKey, userid, pa);
+            attendanceDao.findonemohu(baseKey, userid, pa);
         }
         if (!StringUtils.isEmpty(type)) {
             if (type.toString().equals("0")) {
                 //降序
-                return attendceDao.findByUserOrderByTypeIdDesc(userid, pa);
+                return attendanceDao.findByUserOrderByTypeIdDesc(userid, pa);
             } else {
                 //升序
-                return attendceDao.findByUserOrderByTypeIdAsc(userid, pa);
+                return attendanceDao.findByUserOrderByTypeIdAsc(userid, pa);
             }
         }
         if (!StringUtils.isEmpty(status)) {
             if (status.toString().equals("0")) {
-                return attendceDao.findByUserOrderByStatusIdDesc(userid, pa);
+                return attendanceDao.findByUserOrderByStatusIdDesc(userid, pa);
             } else {
-                return attendceDao.findByUserOrderByStatusIdAsc(userid, pa);
+                return attendanceDao.findByUserOrderByStatusIdAsc(userid, pa);
             }
         }
         if (!StringUtils.isEmpty(time)) {
             if (time.toString().equals("0")) {
-                return attendceDao.findByUserOrderByAttendsTimeDesc(userid, pa);
+                return attendanceDao.findByUserOrderByAttendsTimeDesc(userid, pa);
             } else {
-                return attendceDao.findByUserOrderByAttendsTimeAsc(userid, pa);
+                return attendanceDao.findByUserOrderByAttendsTimeAsc(userid, pa);
             }
         } else {
             // 第几页 以及页里面数据的条数
-            return attendceDao.findByUserOrderByAttendsTimeDesc(userid, pa);
+            return attendanceDao.findByUserOrderByAttendsTimeDesc(userid, pa);
         }
     }
 
     @Override
-    public void signin(HttpSession session, Model model) {
+    public void signIn(HttpSession session, Model model) {
 
 
         InetAddress ia = null;
@@ -152,7 +150,7 @@ public class AttendceServiceImpl implements AttendceService {
         service.addConverter(new StringtoDate());
         // 状态默认是正常
         long typeId, statusId = 10;
-        Attends attends = null;
+        Attendance attends = null;
         Long userId = Long.parseLong(String.valueOf(session.getAttribute("userId")));
         User user = userDao.findById(userId).get();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -175,7 +173,7 @@ public class AttendceServiceImpl implements AttendceService {
         Long aid = null;
 
         // 查找用户当天的所有记录
-        Integer count = attendceDao.countrecord(nowdate, userId);
+        Integer count = attendanceDao.countrecord(nowdate, userId);
         if (hourminsec.compareTo(end) > 0) {
             // 在17之后签到无效
             model.addAttribute("error", "1");
@@ -197,8 +195,8 @@ public class AttendceServiceImpl implements AttendceService {
                     } else if (hourminsec.compareTo(start) < 0) {
                         statusId = 10;
                     }
-                    attends = new Attends(typeId, statusId, date, hourmin, weekofday, attendip, user);
-                    attendceDao.save(attends);
+                    attends = new Attendance(typeId, statusId, date, hourmin, weekofday, attendip, user);
+                    attendanceDao.save(attends);
                 }
             }
             if (count == 1) {
@@ -213,8 +211,8 @@ public class AttendceServiceImpl implements AttendceService {
                     // 在规定时间早下班早退
                     statusId = 12;
                 }
-                attends = new Attends(typeId, statusId, date, hourmin, weekofday, attendip, user);
-                attendceDao.save(attends);
+                attends = new Attendance(typeId, statusId, date, hourmin, weekofday, attendip, user);
+                attendanceDao.save(attends);
             }
             if (count >= 2) {
                 // 已经是下班的状态了 大于2就是修改考勤时间了
@@ -225,16 +223,16 @@ public class AttendceServiceImpl implements AttendceService {
                     // 最进一次签到在规定时间早下班早退
                     statusId = 12;
                 }
-                aid = attendceDao.findoffworkid(nowdate, userId);
-                Attends attends2 = attendceDao.findById(aid).get();
+                aid = attendanceDao.findoffworkid(nowdate, userId);
+                Attendance attends2 = attendanceDao.findById(aid).get();
                 attends2.setAttendsIp(attendip);
-                attendceDao.save(attends2);
-                updatetime(date, hourmin, statusId, aid);
-                Attends aList = attendceDao.findlastest(nowdate, userId);
+                attendanceDao.save(attends2);
+                updateTime(date, hourmin, statusId, aid);
+                Attendance aList = attendanceDao.findlastest(nowdate, userId);
             }
         }
         // 显示用户当天最新的记录
-        Attends aList = attendceDao.findlastest(nowdate, userId);
+        Attendance aList = attendanceDao.findlastest(nowdate, userId);
         if (aList != null) {
             String type = typeDao.findname(aList.getTypeId());
             model.addAttribute("type", type);
@@ -245,64 +243,64 @@ public class AttendceServiceImpl implements AttendceService {
     }
 
     @Override
-    public Integer updatetime(Date date, String hourmin, Long statusIdlong, long attid) {
+    public Integer updateTime(Date date, String hourmin, Long statusIdlong, long attid) {
 
 
-        return attendceDao.updateatttime(date, hourmin, statusIdlong, attid);
+        return attendanceDao.updateatttime(date, hourmin, statusIdlong, attid);
     }
 
 
     //单个用户的排序和分页
-    private void signsortpaging(HttpServletRequest request, Model model, HttpSession session, int page, String baseKey,
+    private void signSortPaging(HttpServletRequest request, Model model, HttpSession session, int page, String baseKey,
                                 String type, String status, String time, String icon) {
         Long userid = Long.valueOf(String.valueOf(session.getAttribute("userId")));
         commonMethods.setSomething(baseKey, type, status, time, icon, model);
-        Page<Attends> page2 = singlepage(page, baseKey, userid, type, status, time);
+        Page<Attendance> page2 = singlepage(page, baseKey, userid, type, status, time);
         commonMethods.setTypeStatus(request, "aoa_attends_list", "aoa_attends_list");
         request.setAttribute("alist", page2.getContent());
         request.setAttribute("page", page2);
-        request.setAttribute("url", "attendcelisttable");
+        request.setAttribute("url", "attendancelisttable");
     }
 
-    public Page<Attends> singlepage(int page, String baseKey, long userid, Object type, Object status, Object time) {
+    public Page<Attendance> singlepage(int page, String baseKey, long userid, Object type, Object status, Object time) {
         Pageable pa = PageRequest.of(page, 10);
         //0为降序 1为升序
         if (!StringUtils.isEmpty(baseKey)) {
             // 查询
-            attendceDao.findonemohu(baseKey, userid, pa);
+            attendanceDao.findonemohu(baseKey, userid, pa);
         }
         if (!StringUtils.isEmpty(type)) {
             if (type.toString().equals("0")) {
                 //降序
-                return attendceDao.findByUserOrderByTypeIdDesc(userid, pa);
+                return attendanceDao.findByUserOrderByTypeIdDesc(userid, pa);
             } else {
                 //升序
-                return attendceDao.findByUserOrderByTypeIdAsc(userid, pa);
+                return attendanceDao.findByUserOrderByTypeIdAsc(userid, pa);
             }
         }
         if (!StringUtils.isEmpty(status)) {
             if (status.toString().equals("0")) {
-                return attendceDao.findByUserOrderByStatusIdDesc(userid, pa);
+                return attendanceDao.findByUserOrderByStatusIdDesc(userid, pa);
             } else {
-                return attendceDao.findByUserOrderByStatusIdAsc(userid, pa);
+                return attendanceDao.findByUserOrderByStatusIdAsc(userid, pa);
             }
         }
         if (!StringUtils.isEmpty(time)) {
             if (time.toString().equals("0")) {
-                return attendceDao.findByUserOrderByAttendsTimeDesc(userid, pa);
+                return attendanceDao.findByUserOrderByAttendsTimeDesc(userid, pa);
             } else {
-                return attendceDao.findByUserOrderByAttendsTimeAsc(userid, pa);
+                return attendanceDao.findByUserOrderByAttendsTimeAsc(userid, pa);
             }
         } else {
             // 第几页 以及页里面数据的条数
-            return attendceDao.findByUserOrderByAttendsTimeDesc(userid, pa);
+            return attendanceDao.findByUserOrderByAttendsTimeDesc(userid, pa);
         }
 
     }
 
 
     @Override
-    public void allsortpaging(HttpServletRequest request, HttpSession session, int page, String baseKey, String type,
+    public void allSortPaging(HttpServletRequest request, HttpSession session, int page, String baseKey, String type,
                               String status, String time, String icon, Model model) {
         CommonMethods.setSomething(baseKey, type, status, time, icon, model);
         Long userId = Long.parseLong(String.valueOf(session.getAttribute("userId")));
@@ -316,50 +314,50 @@ public class AttendceServiceImpl implements AttendceService {
         }
         User user = userDao.findById(userId).get();
         commonMethods.setTypeStatus(request, "aoa_attends_list", "aoa_attends_list");
-        Page<Attends> page2 = paging(page, baseKey, ids, type, status, time);
+        Page<Attendance> page2 = paging(page, baseKey, ids, type, status, time);
         request.setAttribute("alist", page2.getContent());
         request.setAttribute("page", page2);
-        request.setAttribute("url", "attendcetable");
+        request.setAttribute("url", "attendancetable");
     }
 
 
-    public Page<Attends> paging(int page, String baseKey, List<Long> user, Object type, Object status, Object time) {
+    public Page<Attendance> paging(int page, String baseKey, List<Long> user, Object type, Object status, Object time) {
         Pageable pa = PageRequest.of(page, 10);
         if (!StringUtils.isEmpty(baseKey)) {
             // 模糊查询
-            return attendceDao.findsomemohu(baseKey, user, pa);
+            return attendanceDao.findsomemohu(baseKey, user, pa);
         }
         if (!StringUtils.isEmpty(type)) {
             if ("0".equals(type.toString())) {
                 //降序
-                return attendceDao.findByUserOrderByTypeIdDesc(user, pa);
+                return attendanceDao.findByUserOrderByTypeIdDesc(user, pa);
             } else {
                 //升序
-                return attendceDao.findByUserOrderByTypeIdAsc(user, pa);
+                return attendanceDao.findByUserOrderByTypeIdAsc(user, pa);
             }
         }
         if (!StringUtils.isEmpty(status)) {
             if ("0".equals(status.toString())) {
-                return attendceDao.findByUserOrderByStatusIdDesc(user, pa);
+                return attendanceDao.findByUserOrderByStatusIdDesc(user, pa);
             } else {
-                return attendceDao.findByUserOrderByStatusIdAsc(user, pa);
+                return attendanceDao.findByUserOrderByStatusIdAsc(user, pa);
             }
         }
         if (!StringUtils.isEmpty(time)) {
             if ("0".equals(time.toString())) {
-                return attendceDao.findByUserOrderByAttendsTimeDesc(user, pa);
+                return attendanceDao.findByUserOrderByAttendsTimeDesc(user, pa);
             } else {
-                return attendceDao.findByUserOrderByAttendsTimeAsc(user, pa);
+                return attendanceDao.findByUserOrderByAttendsTimeAsc(user, pa);
             }
         } else {
-            return attendceDao.findByUserOrderByAttendsTimeDesc(user, pa);
+            return attendanceDao.findByUserOrderByAttendsTimeDesc(user, pa);
         }
 
 
     }
 
     @Override
-    public void weektablepaging(HttpServletRequest request, HttpSession session, int page, String baseKey,String starttime,String endtime) {
+    public void weekTablePaging(HttpServletRequest request, HttpSession session, int page, String baseKey, String starttime, String endtime) {
 
         // 格式转化
         service.addConverter(new StringtoDate());
@@ -388,10 +386,10 @@ public class AttendceServiceImpl implements AttendceService {
             startdate = start;
         }
         enddate = end;
-        List<Attends> alist = attendceDao.findoneweek(startdate, enddate, ids);
-        Set<Attends> attenceset = new HashSet<>();
+        List<Attendance> alist = attendanceDao.findoneweek(startdate, enddate, ids);
+        Set<Attendance> attenceset = new HashSet<>();
         for (User user : userspage) {
-            for (Attends attence : alist) {
+            for (Attendance attence : alist) {
                 if (Objects.equals(attence.getUser().getUserId(), user.getUserId())) {
                     attenceset.add(attence);
                 }
@@ -402,7 +400,6 @@ public class AttendceServiceImpl implements AttendceService {
         request.setAttribute("ulist", userspage.getContent());
 
 
-        System.out.println(alist);
         request.setAttribute("page", userspage);
         request.setAttribute("weekday", weekday);
         request.setAttribute("url", "realweektable");
@@ -412,7 +409,7 @@ public class AttendceServiceImpl implements AttendceService {
 
 
     @Override
-    public void monthtablepaging(HttpServletRequest request, Model model, HttpSession session, int page, String baseKey) {
+    public void monthTablePaging(HttpServletRequest request, Model model, HttpSession session, int page, String baseKey) {
 
 
         Integer offnum, toworknum;
@@ -439,26 +436,26 @@ public class AttendceServiceImpl implements AttendceService {
         for (User user : userspage) {
             result = new ArrayList<>();
             //当月该用户下班次数
-            offnum = attendceDao.countoffwork(month, user.getUserId());
+            offnum = attendanceDao.countoffwork(month, user.getUserId());
             //当月该用户上班次数
-            toworknum = attendceDao.counttowork(month, user.getUserId());
+            toworknum = attendanceDao.counttowork(month, user.getUserId());
             for (long statusId = 10; statusId < 13; statusId++) {
                 //这里面记录了正常迟到早退等状态
                 if (statusId == 12) {
-                    result.add(attendceDao.countnum(month, statusId, user.getUserId()) + toworknum - offnum);
+                    result.add(attendanceDao.countnum(month, statusId, user.getUserId()) + toworknum - offnum);
                 } else {
-                    result.add(attendceDao.countnum(month, statusId, user.getUserId()));
+                    result.add(attendanceDao.countnum(month, statusId, user.getUserId()));
                 }
             }
             //添加请假和出差的记录//应该是查找 使用sql的sum（）函数来统计出差和请假的次数
 
-            if (attendceDao.countothernum(month, 46L, user.getUserId()) != null) {
-                result.add(attendceDao.countothernum(month, 46L, user.getUserId()));
+            if (attendanceDao.countothernum(month, 46L, user.getUserId()) != null) {
+                result.add(attendanceDao.countothernum(month, 46L, user.getUserId()));
             } else {
                 result.add(0);
             }
-            if (attendceDao.countothernum(month, 47L, user.getUserId()) != null) {
-                result.add(attendceDao.countothernum(month, 47L, user.getUserId()));
+            if (attendanceDao.countothernum(month, 47L, user.getUserId()) != null) {
+                result.add(attendanceDao.countothernum(month, 47L, user.getUserId()));
             } else {
                 result.add(0);
             }
@@ -485,23 +482,23 @@ public class AttendceServiceImpl implements AttendceService {
     }
 
     @Override
-    public Integer delete(long aid) {
+    public void deleteAttendance(long aid) {
 
 
-        return attendceDao.delete(aid);
+        attendanceDao.delete(aid);
     }
 
 
     @Override
-    public Attends findOne(Long id) {
+    public Attendance findOneAttendance(Long id) {
 
-        return attendceDao.findById(id).get();
+        return attendanceDao.findById(id).get();
     }
 
     @Override
-    public void save(Attends attends) {
+    public void save(Attendance attends) {
 
-        attendceDao.save(attends);
+        attendanceDao.save(attends);
 
     }
 }

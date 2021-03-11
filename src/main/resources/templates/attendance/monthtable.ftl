@@ -40,7 +40,7 @@
 			</div>
 		<div class="box-body">
 			<div id="refresh" class="thistable">
-				<#include "/attendce/realmonthtable.ftl">
+				<#include "/attendance/realmonthtable.ftl">
 			</div>
 		</div>
          </div>

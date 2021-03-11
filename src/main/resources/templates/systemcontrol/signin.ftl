@@ -22,7 +22,7 @@
 	<div class="iconfont">
 		<span class="glyphicon glyphicon-time"></span>
 	</div>
-	<a href="attendcelist" class="moreduo"> 更多 <span
+	<a href="attendancelist" class="moreduo"> 更多 <span
 		class="glyphicon glyphicon-circle-arrow-right"></span>
 	</a>
 </div>
@@ -46,7 +46,7 @@
 </#if>
 </#if>
 <script>
-	$(".attendce").on('click',function(){
+	$(".attendance").on('click',function(){
 		confirm("您确定签到吗");
 		$("#refresh").load('signin');
 	});

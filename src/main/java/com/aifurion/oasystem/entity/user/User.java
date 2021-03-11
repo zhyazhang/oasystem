@@ -1,7 +1,7 @@
 package com.aifurion.oasystem.entity.user;
 
 
-import com.aifurion.oasystem.entity.attendce.Attends;
+import com.aifurion.oasystem.entity.attendance.Attendance;
 import com.aifurion.oasystem.entity.discuss.Discuss;
 import com.aifurion.oasystem.entity.discuss.Reply;
 import com.aifurion.oasystem.entity.note.Note;
@@ -133,7 +133,7 @@ public class User {
     private List<Note> note;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Attends> aSet;
+    private Set<Attendance> aSet;
 
 
     public String getPinyin() {
@@ -155,11 +155,11 @@ public class User {
     public User() {
     }
 
-    public Set<Attends> getaSet() {
+    public Set<Attendance> getaSet() {
         return aSet;
     }
 
-    public void setaSet(Set<Attends> aSet) {
+    public void setaSet(Set<Attendance> aSet) {
         this.aSet = aSet;
     }
 

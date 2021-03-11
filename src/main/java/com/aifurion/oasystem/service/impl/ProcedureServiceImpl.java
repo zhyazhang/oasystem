@@ -1,13 +1,13 @@
 package com.aifurion.oasystem.service.impl;
 
 import com.aifurion.oasystem.common.tool.Tool;
-import com.aifurion.oasystem.dao.attendce.AttendceDao;
+import com.aifurion.oasystem.dao.attendance.AttendanceDao;
 import com.aifurion.oasystem.dao.note.AttachmentDao;
 import com.aifurion.oasystem.dao.process.*;
 import com.aifurion.oasystem.dao.system.StatusDao;
 import com.aifurion.oasystem.dao.system.TypeDao;
 import com.aifurion.oasystem.dao.user.UserDao;
-import com.aifurion.oasystem.entity.attendce.Attends;
+import com.aifurion.oasystem.entity.attendance.Attendance;
 import com.aifurion.oasystem.entity.note.Attachment;
 import com.aifurion.oasystem.entity.process.*;
 import com.aifurion.oasystem.entity.system.SystemStatusList;
@@ -25,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -33,8 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
 
@@ -85,7 +82,7 @@ public class ProcedureServiceImpl implements ProcedureService {
     @Autowired
     private ResignDao resignDao;
     @Autowired
-    private AttendceDao attendceDao;
+    private AttendanceDao attendanceDao;
 
     @Value("${attachment.roopath}")
     private String rootpath;
@@ -436,7 +433,7 @@ public class ProcedureServiceImpl implements ProcedureService {
             processListDao.save(pro);
             if (("请假申请").equals(typename) || ("出差申请").equals(typename)) {
                 if (reviewed.getStatusId() == 25) {
-                    Attends attend = new Attends();
+                    Attendance attend = new Attendance();
                     attend.setHolidayDays(pro.getProcseeDays());
                     attend.setHolidayStart(pro.getStartTime());
                     attend.setUser(pro.getUserId());
@@ -445,7 +442,7 @@ public class ProcedureServiceImpl implements ProcedureService {
                     } else if (("出差申请").equals(typename)) {
                         attend.setStatusId(47L);
                     }
-                    attendceDao.save(attend);
+                    attendanceDao.save(attend);
                 }
             }
 
