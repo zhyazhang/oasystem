@@ -117,19 +117,30 @@ public class AttendceController {
     }
 
 
+
     @RequestMapping("/attendceweek")
     public String test3(HttpServletRequest request, HttpSession session,
                         @RequestParam(value = "page", defaultValue = "0") int page,
                         @RequestParam(value = "baseKey", required = false) String baseKey) {
-        attendceService.weektablepaging(request, session, page, baseKey);
+
+
+
+        attendceService.weektablepaging(request, session, page, baseKey,null,null);
         return "attendce/weektable";
     }
+
 
     @RequestMapping("/realweektable")
     public String dsaf(HttpServletRequest request, HttpSession session,
                        @RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "baseKey", required = false) String baseKey) {
-        attendceService.weektablepaging(request, session, page, baseKey);
+                       @RequestParam(value = "baseKey", required = false) String baseKey,
+                       @RequestParam(value = "starttime") String starttime,
+                       @RequestParam(value = "endtime") String endtime) {
+
+        System.out.println(starttime+"ss"+endtime);
+
+
+        attendceService.weektablepaging(request, session, page, baseKey,starttime,endtime);
         return "attendce/realweektable";
 
     }

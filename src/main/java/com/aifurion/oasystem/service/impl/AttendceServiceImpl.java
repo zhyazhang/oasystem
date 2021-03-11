@@ -359,11 +359,8 @@ public class AttendceServiceImpl implements AttendceService {
     }
 
     @Override
-    public void weektablepaging(HttpServletRequest request, HttpSession session, int page, String baseKey) {
+    public void weektablepaging(HttpServletRequest request, HttpSession session, int page, String baseKey,String starttime,String endtime) {
 
-
-        String starttime = request.getParameter("starttime");
-        String endtime = request.getParameter("endtime");
         // 格式转化
         service.addConverter(new StringtoDate());
         Date startdate = service.convert(starttime, Date.class);
@@ -403,6 +400,9 @@ public class AttendceServiceImpl implements AttendceService {
         }
         String[] weekday = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
         request.setAttribute("ulist", userspage.getContent());
+
+
+        System.out.println(alist);
         request.setAttribute("page", userspage);
         request.setAttribute("weekday", weekday);
         request.setAttribute("url", "realweektable");

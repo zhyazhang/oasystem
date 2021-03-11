@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -20,10 +21,12 @@ public interface AttendceDao extends JpaRepository<Attends, Long> {
 
     @Query("update Attends a set a.attendsTime=?1 ,a.attendHmtime=?2 ,a.statusId=?3 where a.attendsId=?4 ")
     @Modifying(clearAutomatically = true)
+    @Transactional
     Integer updateatttime(Date date, String hourmin, Long statusIdlong, long attid);
 
     @Query("delete from Attends a where a.attendsId=?1")
     @Modifying
+    @Transactional
     Integer delete(long aid);
 
     //查找某用户当天下班的考勤记录id
@@ -103,6 +106,7 @@ public interface AttendceDao extends JpaRepository<Attends, Long> {
     //更改备注
     @Query("update Attends a set a.attendsRemark=?1 where a.attendsId=?2")
     @Modifying
+    @Transactional
     Integer updateremark(String attendsRemark, long attendsId);
 
 

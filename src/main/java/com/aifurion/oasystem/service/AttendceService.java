@@ -33,7 +33,7 @@ public interface AttendceService {
     void attendcePage(HttpServletRequest request, HttpSession session, int page, String baseKey,
 			String type, String status, String time, String icon,Model model) ;
 
-    void weektablepaging(HttpServletRequest request, HttpSession session, int page, String baseKey);
+    void weektablepaging(HttpServletRequest request, HttpSession session, int page, String baseKey,String starttime,String endtime);
 
     void monthtablepaging(HttpServletRequest request, Model model, HttpSession session, int page,
                           String baseKey);

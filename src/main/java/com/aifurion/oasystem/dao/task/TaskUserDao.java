@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public interface TaskUserDao extends PagingAndSortingRepository<Taskuser, Long> 
 	//修改任务中间表状态
 	@Query("update Taskuser ta set ta.statusId=:statusid where ta.taskId.taskId=:taskid")
 	@Modifying
+	@Transactional
 	int updatestatus(@Param("taskid")Long taskid,@Param("statusid")Integer statusid);
 
 	@Query("select tu.taskId.taskId from Taskuser tu where tu.userId.userId=:userid ")

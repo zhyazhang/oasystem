@@ -821,8 +821,8 @@ public class ProcedureServiceImpl implements ProcedureService {
                 assert input != null;
                 input.close();
                 sos.close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
 
             e.printStackTrace();
