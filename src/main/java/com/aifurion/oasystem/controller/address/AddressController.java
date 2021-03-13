@@ -29,22 +29,22 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
-    @GetMapping("/addrmanage")
+    @GetMapping("/addressmanage")
     public String addressManage(@SessionAttribute("userId") Long userId, Model model,
-                                @RequestParam(value="page",defaultValue="0") int page,
-                                @RequestParam(value="size",defaultValue="10") int size) {
+                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                @RequestParam(value = "size", defaultValue = "10") int size) {
 
         addressService.addressManage(userId, model, page, size);
-        return "address/addrmanage";
+        return "address/addressmanage";
 
     }
 
 
     @PostMapping("/changethistype")
     @ResponseBody
-    public Boolean changeType(@RequestParam(value="did")Long did,
-											@SessionAttribute("userId") Long userId,
-											@RequestParam(value="catalog")String catalog) {
+    public Boolean changeType(@RequestParam(value = "did") Long did,
+                              @SessionAttribute("userId") Long userId,
+                              @RequestParam(value = "catalog") String catalog) {
 
         addressService.changeType(did, userId, catalog);
         return true;
@@ -52,14 +52,14 @@ public class AddressController {
 
 
     @PostMapping("/inmessshow")
-    public String inAdressShow(Model model,@RequestParam(value="userId")Long userId) {
+    public String inAdressShow(Model model, @RequestParam(value = "userId") Long userId) {
 
         addressService.inAddressShow(model, userId);
         return "address/inmessshow";
     }
 
     @PostMapping("/outmessshow")
-    public String outAddressShow(Model model,@RequestParam("director") Long director,@SessionAttribute("userId") Long userId) {
+    public String outAddressShow(Model model, @RequestParam("director") Long director, @SessionAttribute("userId") Long userId) {
         boolean flag = addressService.outAddressShow(model, director, userId);
 
         if (flag) {
@@ -71,9 +71,9 @@ public class AddressController {
 
 
     @PostMapping("/changetypename")
-    public String changeTypeName(@RequestParam(value="typename")String newName,
-			@RequestParam(value="oldtypename")String oldName,
-			@SessionAttribute("userId") Long userId) {
+    public String changeTypeName(@RequestParam(value = "typename") String newName,
+                                 @RequestParam(value = "oldtypename") String oldName,
+                                 @SessionAttribute("userId") Long userId) {
 
         addressService.changeTypeName(newName, oldName, userId);
 
@@ -81,9 +81,8 @@ public class AddressController {
     }
 
 
-
     @PostMapping("/addaddress")
-    public String addAddress(HttpServletRequest req, @RequestParam(value="did",required=false) Long did, HttpSession session,
+    public String addAddress(HttpServletRequest req, @RequestParam(value = "did", required = false) Long did, HttpSession session,
                              @SessionAttribute("userId") Long userId, Model model) {
         boolean b = addressService.addAddress(req, did, session, userId, model);
         if (b) {
@@ -103,7 +102,7 @@ public class AddressController {
 
         addressService.saveAddress(director, directorUser, br, file, session, model, userId, req);
 
-        return "redirect:/addrmanage";
+        return "redirect:/addressmanage";
     }
 
 
@@ -121,7 +120,7 @@ public class AddressController {
 
 
     @PostMapping("/deletetypename")
-    public String deleteTypeName(@RequestParam(value="typename") String typename,@SessionAttribute("userId") Long userId) {
+    public String deleteTypeName(@RequestParam(value = "typename") String typename, @SessionAttribute("userId") Long userId) {
 
         addressService.deleteTypeName(typename, userId);
 
@@ -142,12 +141,12 @@ public class AddressController {
 
 
     @GetMapping("/sharemess")
-    public String shareMessage(@RequestParam(value="page",defaultValue="0")int page,
-			@RequestParam(value="size",defaultValue="5")int size,
-			@RequestParam(value="baseKey",required=false) String baseKey,
-			@RequestParam(value="catalog",required=false)String catalog,
-			@RequestParam(value="duid",required=false)Long duid,
-			Model model,@SessionAttribute("userId") Long userId) {
+    public String shareMessage(@RequestParam(value = "page", defaultValue = "0") int page,
+                               @RequestParam(value = "size", defaultValue = "5") int size,
+                               @RequestParam(value = "baseKey", required = false) String baseKey,
+                               @RequestParam(value = "catalog", required = false) String catalog,
+                               @RequestParam(value = "duid", required = false) Long duid,
+                               Model model, @SessionAttribute("userId") Long userId) {
 
         addressService.shareMessage(page, size, baseKey, catalog, duid, model, userId);
 
@@ -170,7 +169,6 @@ public class AddressController {
     }
 
 
-
     @PostMapping("/shareother")
     public String shareOther(@SessionAttribute("userId") Long userId,
                              @RequestParam(value = "directors[]") Long[] directors,
@@ -191,7 +189,6 @@ public class AddressController {
     }
 
 
-
     @GetMapping("/modalshare")
     public String modalShare(@RequestParam(value = "page", defaultValue = "0") int page, Model model,
                              @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -204,9 +201,9 @@ public class AddressController {
 
 
     @PostMapping("/modalpaging")
-    public String modalpaging(@RequestParam(value="page",defaultValue="0") int page,Model model,
-			@RequestParam(value="size",defaultValue="10") int size,
-			@RequestParam(value="baseKey",required=false) String baseKey) {
+    public String modalpaging(@RequestParam(value = "page", defaultValue = "0") int page, Model model,
+                              @RequestParam(value = "size", defaultValue = "10") int size,
+                              @RequestParam(value = "baseKey", required = false) String baseKey) {
         addressService.modalpaging(page, model, size, baseKey);
 
         return "address/shareuser";
@@ -215,42 +212,30 @@ public class AddressController {
 
 
     @RequestMapping("/outaddresspaging")
-    public String outaddresspaging(@RequestParam(value="pageNum",defaultValue="1") int page,Model model,
-			@RequestParam(value="baseKey",required=false) String baseKey,
-			@RequestParam(value="outtype",required=false) String outtype,
-			@RequestParam(value="alph",defaultValue="ALL") String alph,
-			@SessionAttribute("userId") Long userId) {
+    public String outaddresspaging(@RequestParam(value = "pageNum", defaultValue = "1") int page, Model model,
+                                   @RequestParam(value = "baseKey", required = false) String baseKey,
+                                   @RequestParam(value = "outtype", required = false) String outtype,
+                                   @RequestParam(value = "alph", defaultValue = "ALL") String alph,
+                                   @SessionAttribute("userId") Long userId) {
 
         addressService.outaddresspaging(page, model, baseKey, outtype, alph, userId);
 
 
-       return "address/outaddress";
+        return "address/outaddress";
     }
 
 
     @RequestMapping("/inaddresspaging")
-    public String inaddresspaging(@RequestParam(value="page",defaultValue="0") int page,Model model,
-			@RequestParam(value="size",defaultValue="10") int size,
-			@RequestParam(value="baseKey",required=false) String baseKey,
-			@RequestParam(value="alph",defaultValue="ALL") String alph) {
+    public String inaddresspaging(@RequestParam(value = "page", defaultValue = "0") int page, Model model,
+                                  @RequestParam(value = "size", defaultValue = "10") int size,
+                                  @RequestParam(value = "baseKey", required = false) String baseKey,
+                                  @RequestParam(value = "alph", defaultValue = "ALL") String alph) {
 
         addressService.inaddresspaging(page, model, size, baseKey, alph);
 
         return "address/inaddrss";
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

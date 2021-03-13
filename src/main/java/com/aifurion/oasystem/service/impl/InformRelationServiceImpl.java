@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,15 +78,24 @@ public class InformRelationServiceImpl implements InformRelationService {
     @Override
     public List<Map<String, Object>> setList(List<Map<String, Object>> list) {
 
+        List<Map<String, Object>> tempList = new ArrayList<>();
+
         for (Map<String, Object> map : list) {
-            map.put("status", statusDao.findById((Long) map.get("status_id")).get().getStatusName());
-            map.put("type", typeDao.findById((Long) map.get("type_id")).get().getTypeName());
-            map.put("statusColor", statusDao.findById((Long) map.get("status_id")).get().getStatusColor());
-            map.put("userName", userDao.findById((Long) map.get("user_id")).get().getUserName());
-            map.put("deptName", userDao.findById((Long) map.get("user_id")).get().getDept().getDeptName());
-            map.put("contain", this.isForward((Long) map.get("relatin_notice_id"), (Long) map.get("relatin_user_id")));
+            //map.put("status", statusDao.findById((Long) map.get("status_id")).get().getStatusName());
+
+           // Long.valueOf(String.valueOf((BigInteger)map.get("status_id")));
+
+            Map<String, Object> tempMap = new HashMap<>(map);
+
+            tempMap.put("status", statusDao.findById(Long.parseLong(map.get("status_id").toString())).get().getStatusName());
+            tempMap.put("type", typeDao.findById(Long.parseLong(map.get("type_id").toString())).get().getTypeName());
+            tempMap.put("statusColor", statusDao.findById(Long.parseLong(map.get("status_id").toString())).get().getStatusColor());
+            tempMap.put("userName", userDao.findById(Long.parseLong(map.get("user_id").toString())).get().getUserName());
+            tempMap.put("deptName", userDao.findById(Long.parseLong(map.get("user_id").toString())).get().getDept().getDeptName());
+            tempMap.put("contain", this.isForward(Long.parseLong(map.get("relatin_notice_id").toString()), Long.parseLong(map.get("relatin_user_id").toString())));
+            tempList.add(tempMap);
         }
-        return list;
+        return tempList;
 
 
     }

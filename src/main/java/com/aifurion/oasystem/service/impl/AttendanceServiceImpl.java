@@ -90,7 +90,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         commonMethods.setTypeStatus(request, "aoa_attends_list", "aoa_attends_list");
         request.setAttribute("alist", page2.getContent());
         request.setAttribute("page", page2);
-        request.setAttribute("url", "attendancelisttable");
+        request.setAttribute("url", "attendancetablelist");
 
 
     }
@@ -259,7 +259,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         commonMethods.setTypeStatus(request, "aoa_attends_list", "aoa_attends_list");
         request.setAttribute("alist", page2.getContent());
         request.setAttribute("page", page2);
-        request.setAttribute("url", "attendancelisttable");
+        request.setAttribute("url", "attendancetablelist");
     }
 
     public Page<Attendance> singlepage(int page, String baseKey, long userid, Object type, Object status, Object time) {

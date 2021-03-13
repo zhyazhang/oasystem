@@ -11,7 +11,6 @@ import com.aifurion.oasystem.entity.note.Attachment;
 import com.aifurion.oasystem.entity.note.Director;
 import com.aifurion.oasystem.entity.note.DirectorUser;
 import com.aifurion.oasystem.entity.user.User;
-import com.aifurion.oasystem.mapper.AddressMapper;
 import com.aifurion.oasystem.service.AddressService;
 import com.aifurion.oasystem.service.MailService;
 import com.github.pagehelper.PageHelper;
@@ -59,9 +58,6 @@ public class AddressServiceImpl implements AddressService {
 
     @Autowired
     private MailService mailService;
-
-    @Autowired
-    private AddressMapper addressMapper;
 
 
     @Override
@@ -375,8 +371,9 @@ public class AddressServiceImpl implements AddressService {
 
 
         PageHelper.startPage(page, 10);
-        List<Map<String, Object>> directors = addressMapper.allDirector(userId, alph, outtype, baseKey);
+        List<Map<String, Object>> directors = addressDao.getOutDirector(userId, alph, outtype, baseKey);
         List<Map<String, Object>> adds = encapsulation(directors);
+
         PageInfo<Map<String, Object>> pageinfo = new PageInfo<>(directors);
         if (!StringUtils.isEmpty(outtype)) {
             model.addAttribute("outtype", outtype);

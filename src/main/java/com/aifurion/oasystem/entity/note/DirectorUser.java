@@ -24,11 +24,11 @@ public class DirectorUser {
 	private Long directorUserId;
 	
 	@ManyToOne
-	@JoinColumn(name="director_id")
+	@JoinColumn(name="director_u_id")
 	private Director director;
 	
 	@ManyToOne
-	@JoinColumn(name="user_id")
+	@JoinColumn(name="user_u_id")
 	private User user;
 	
 	@ManyToOne

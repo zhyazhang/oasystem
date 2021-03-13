@@ -7,6 +7,7 @@ import com.aifurion.oasystem.dao.file.FileListDao;
 import com.aifurion.oasystem.dao.inform.InformRelationDao;
 import com.aifurion.oasystem.dao.mail.MailReceiverDao;
 import com.aifurion.oasystem.dao.note.DirectorDao;
+import com.aifurion.oasystem.dao.notic.NoticeDao;
 import com.aifurion.oasystem.dao.plan.PlanDao;
 import com.aifurion.oasystem.dao.process.NotepaperDao;
 import com.aifurion.oasystem.dao.process.ProcessListDao;
@@ -28,7 +29,6 @@ import com.aifurion.oasystem.entity.system.SystemTypeList;
 import com.aifurion.oasystem.entity.task.Taskuser;
 import com.aifurion.oasystem.entity.user.User;
 import com.aifurion.oasystem.entity.user.UserLog;
-import com.aifurion.oasystem.mapper.NoticeMapper;
 import com.aifurion.oasystem.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,9 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ：zzy
@@ -80,13 +78,13 @@ public class IndexServiceImpl implements IndexService {
     @Autowired
     private DiscussDao discussDao;
     @Autowired
-    private NoticeMapper noticeMapper;
-
-    @Autowired
     private StatusDao statusDao;
 
     @Autowired
     private TypeDao typeDao;
+
+    @Autowired
+    private NoticeDao noticeDao;
 
 
     @Autowired
@@ -200,20 +198,26 @@ public class IndexServiceImpl implements IndexService {
 
         request.setAttribute("discussnum", discussDao.count());
 
-        List<Map<String, Object>> noticeList = noticeMapper.findMyNoticeLimit(userId);
+        List<Map<String, Object>> noticeList = noticeDao.findMyNoticeLimit(userId);
+
+
+        List<Map<String, Object>> tempList = new ArrayList<>();
+
 
         for (Map<String, Object> map : noticeList) {
 
-            map.put("status", statusDao.findById((Long) map.get("status_id")).get().getStatusName());
-			map.put("type", typeDao.findById((Long) map.get("type_id")).get().getTypeName());
-			map.put("statusColor", statusDao.findById((Long) map.get("status_id")).get().getStatusColor());
-			map.put("userName", userDao.findById((Long) map.get("user_id")).get().getUserName());
-			map.put("deptName", userDao.findById((Long) map.get("user_id")).get().getDept().getDeptName());
+            Map<String, Object> tempMap = new HashMap<>(map);
+            tempMap.put("status", statusDao.findById(Long.parseLong(map.get("status_id").toString())).get().getStatusName());
+            tempMap.put("type", typeDao.findById(Long.parseLong(map.get("type_id").toString())).get().getTypeName());
+            tempMap.put("statusColor", statusDao.findById(Long.parseLong(map.get("status_id").toString())).get().getStatusColor());
+            tempMap.put("userName", userDao.findById(Long.parseLong(map.get("user_id").toString())).get().getUserName());
+            tempMap.put("deptName", userDao.findById(Long.parseLong(map.get("user_id").toString())).get().getDept().getDeptName());
+            tempList.add(tempMap);
 
         }
 
         showalist(model, userId);
-        model.addAttribute("noticeList", noticeList);
+        model.addAttribute("noticeList", tempList);
 
         //列举计划
 
@@ -246,43 +250,18 @@ public class IndexServiceImpl implements IndexService {
     }
 
 
-
     private void showalist(Model model, Long userId) {
-		// 显示用户当天最新的记录
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		String nowdate = sdf.format(date);
-		Attendance aList = attendanceDao.findlastest(nowdate, userId);
-		if (aList != null) {
-			String type = typeDao.findname(aList.getTypeId());
-			model.addAttribute("type", type);
-		}
-		model.addAttribute("alist", aList);
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        // 显示用户当天最新的记录
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String nowdate = sdf.format(date);
+        Attendance aList = attendanceDao.findlastest(nowdate, userId);
+        if (aList != null) {
+            String type = typeDao.findname(aList.getTypeId());
+            model.addAttribute("type", type);
+        }
+        model.addAttribute("alist", aList);
+    }
 
 
 }

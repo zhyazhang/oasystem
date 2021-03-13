@@ -64,7 +64,7 @@ public class AttendanceController {
     }
 
 
-    @GetMapping("/attendancelisttable")
+    @GetMapping("/attendancetablelist")
     public String getAttendanceListTable(HttpServletRequest request, Model model, HttpSession session,
                                        @RequestParam(value = "page", defaultValue = "0") int page,
                                        @RequestParam(value = "baseKey", required = false) String baseKey,
@@ -79,7 +79,7 @@ public class AttendanceController {
 
 
     @RequestMapping("/attendancetable")
-    public String table(HttpServletRequest request, HttpSession session,
+    public String attendanceManagement(HttpServletRequest request, HttpSession session,
                         @RequestParam(value = "page", defaultValue = "0") int page,
                         @RequestParam(value = "baseKey", required = false) String baseKey,
                         @RequestParam(value = "type", required = false) String type,

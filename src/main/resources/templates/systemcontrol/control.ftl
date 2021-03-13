@@ -108,7 +108,7 @@
                 <div class="iconfont">
                     <span class="glyphicon glyphicon-earphone"></span>
                 </div>
-                <a href="addrmanage" class="moreduo"> 更多 <span
+                <a href="addressmanage" class="moreduo"> 更多 <span
                             class="glyphicon glyphicon-circle-arrow-right"></span>
                 </a>
             </div>

@@ -18,6 +18,7 @@ import javax.persistence.*;
 @Table(name="aoa_director")
 public class Director {
 
+
 	@Id
 	@Column(name="director_id")
 	@GeneratedValue(strategy= GenerationType.IDENTITY)

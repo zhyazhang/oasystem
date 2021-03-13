@@ -6,6 +6,7 @@ import com.aifurion.oasystem.common.formVaild.ResultEnum;
 import com.aifurion.oasystem.common.formVaild.ResultVO;
 import com.aifurion.oasystem.dao.inform.InformDao;
 import com.aifurion.oasystem.dao.inform.InformRelationDao;
+import com.aifurion.oasystem.dao.notic.NoticeDao;
 import com.aifurion.oasystem.dao.system.StatusDao;
 import com.aifurion.oasystem.dao.system.TypeDao;
 import com.aifurion.oasystem.dao.user.DeptDao;
@@ -15,7 +16,6 @@ import com.aifurion.oasystem.entity.notice.NoticesList;
 import com.aifurion.oasystem.entity.system.SystemStatusList;
 import com.aifurion.oasystem.entity.system.SystemTypeList;
 import com.aifurion.oasystem.entity.user.User;
-import com.aifurion.oasystem.mapper.NoticeMapper;
 import com.aifurion.oasystem.service.InformManageService;
 import com.aifurion.oasystem.service.InformRelationService;
 import com.aifurion.oasystem.service.InformService;
@@ -67,7 +67,7 @@ public class InformManageServiceImpl implements InformManageService {
 	private InformRelationService informRelationService;
 
 	@Autowired
-	private NoticeMapper noticeMapper;
+	private NoticeDao noticeDao;
 
 
     @Override
@@ -131,9 +131,10 @@ public class InformManageServiceImpl implements InformManageService {
     @Override
     public void infromList(HttpSession session, HttpServletRequest req, Model model, int page) {
 
-        Long userId = Long.parseLong(session.getAttribute("userId") + "");
+        Long userId = Long.parseLong(String.valueOf(session.getAttribute("userId")));
 		PageHelper.startPage(page, 10);
-		List<Map<String, Object>> list = noticeMapper.findMyNotice(userId);
+
+		List<Map<String, Object>> list = noticeDao.findMyNotice(userId);
 		PageInfo<Map<String, Object>> pageinfo=new PageInfo<Map<String, Object>>(list);
 		List<Map<String, Object>> list2=informRelationService.setList(list);
 		model.addAttribute("url", "informlistpaging");
