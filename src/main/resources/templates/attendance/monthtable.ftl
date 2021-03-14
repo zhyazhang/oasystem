@@ -7,10 +7,10 @@
 <#include "/common/commoncss.ftl">
 <link href="css/common/checkbox.css" rel="stylesheet" />
 <link href="css/common/iconfont.css" rel="stylesheet" />
-<link href="css/attendce/monthtable.css" rel="stylesheet"/>
+<link href="css/attendance/monthtable.css" rel="stylesheet"/>
 <script type="text/javascript" src="js/iconfont.js"></script> 
 <script	type="text/javascript" src="plugins/My97DatePicker/WdatePicker.js"></script>
-<script type="text/javascript" src="js/attendce/monthtable.js"></script>
+<script type="text/javascript" src="js/attendance/monthtable.js"></script>
 </head>
 <body>
 	<div class="row" style="padding-top: 10px">

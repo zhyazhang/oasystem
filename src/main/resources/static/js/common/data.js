@@ -50,7 +50,6 @@ Date.prototype.Format = function(fmt) { //author: meizz
 		
 		$('#endTime').on('click',function(){
 			var start=$('#starTime').val();
-			console.log(start);
 			WdatePicker({ minDate:addDate(start,1),maxDate:addDate(start,60),dateFmt:'yyyy-MM-dd HH:mm:ss'});
 
 		});

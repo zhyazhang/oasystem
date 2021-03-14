@@ -25,7 +25,6 @@ $('.usershow').popover({
 			+'</table>	</div></div>'
 	});
 	$('.usershow').on('mouseover',function(){
-		console.log("fds");
 		$(".thisdept").text($(this).attr("thisdept"));
 		$(".thisrole").text($(this).attr("thisrole"));
 		$(".thistel").text($(this).attr("thistel"));
@@ -45,11 +44,7 @@ $('.usershow').popover({
 			+'</table>	</div></div>'
 	});
 	$('.othershow').on('mouseover',function(){
-		console.log("fds");
-		console.log("fdsddd:"+$(this).attr("thistel"));
-		console.log("ssss:"+$(this).attr("thissex"));
-		console.log($(this).attr("thisemail"));
-		console.log($(this).attr("thiscompany"));
+
 		$(".thisdept").text($(this).attr("thistel"));
 		$(".thisrole").text($(this).attr("thissex"));
 		$(".thistel").text($(this).attr("thisemail"));

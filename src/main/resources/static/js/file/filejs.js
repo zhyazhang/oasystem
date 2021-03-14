@@ -17,7 +17,6 @@ $(".loadfiletype").on("mouseover mouseout",".file-one",function(event){
  * .file-box .file-check"
  */
 $(".loadfiletype").on("click",".file-check",function(){
-	console.log("ssss");
 	if($(this).parent(".file-one").hasClass("file-one-check")){
 		$(this).parent(".file-one").removeClass("file-one-check");
 	}else{

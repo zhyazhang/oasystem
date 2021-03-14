@@ -73,7 +73,6 @@
 		/* 查找 */
 		$('.modalbaseKetsubmit').on('click', function() {
 			var baseKey = $('.modalbaseKey').val();
-			console.log(baseKey);
 			$('.modaltable').load('${modalurl}?baseKey='+baseKey+'${(catalog)!''}');
 		});
 </script>

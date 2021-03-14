@@ -214,8 +214,10 @@
                                 <td><span>${(notice.title)!''}</span></td>
                                 <td>
                                     <a href="informshow?id=${notice.notice_id}&read=${notice.is_read}&relationid=${notice.relatin_id}"
-                                       class="look-xiangxi"><span
-                                                class="glyphicon glyphicon-search"> </span> 查看 </a></td>
+                                       class="look-xiangxi">
+                                        <span class="glyphicon glyphicon-search"> </span> 查看
+                                    </a>
+                                </td>
                             </tr>
                         </#list>
 
@@ -271,9 +273,14 @@
                                         </#if>
                                     </#list>
                                 </td>
-                                <td><span>${(pro.processName)!''}</span></td>
-                                <td><a class="look-xiangxi" href="particular?id=${pro.processId}&typename=${pro.typeNmae}"><span
-                                                class="glyphicon glyphicon-search"> </span> 查看 </a></td>
+                                <td>
+                                    <span>${(pro.processName)!''}</span>
+                                </td>
+                                <td><a class="look-xiangxi"
+                                       href="particular?id=${pro.processId}&typename=${pro.typeNmae}">
+                                        <span class="glyphicon glyphicon-search"> </span> 查看
+                                    </a>
+                                </td>
                             </tr>
                         </#list>
                     </table>
@@ -335,9 +342,13 @@
                                 </#list>
 
 
-                                <td><span>${(plan.title)!''}</span></td>
-                                <td><a href="planedit?pid=${plan.planId}" class="look-xiangxi"><span
-                                                class="glyphicon glyphicon-search"> </span> 查看 </a></td>
+                                <td>
+                                    <span>${(plan.title)!''}</span></td>
+                                <td>
+                                    <a href="planedit?pid=${plan.planId}" class="look-xiangxi">
+                                        <span class="glyphicon glyphicon-search"> </span> 查看
+                                    </a>
+                                </td>
                             </tr>
                         </#list>
                     </table>
@@ -539,18 +550,20 @@
                                         src="/image/${(user.imgPath)!'/timg.jpg'}" alt="photo" title="wowoowo"
                                         class="item-li-img"/>
                                 <p class="item-li-p">
-                                    <a href="userpanel">${(np.title)!''} <small class="pull-right"
-                                                                                style="color: #777;"><span
-                                                    class="glyphicon glyphicon-time"></span>${(np.createTime)!''}
+                                    <a href="userpanel">${(np.title)!''}
+                                        <small class="pull-right" style="color: #777;">
+                                            <span class="glyphicon glyphicon-time"></span>${(np.createTime)!''}
                                         </small>
                                     </a><br> ${(np.concent)!''}
-                                </p></li>
+                                </p>
+                            </li>
                         </#list>
                     </ul>
                     <div class="input-group input-div">
                         <input type="text" placeholder="便签内容" style="outline: none;" class="concent"/> <a
-                                id="writep" style="cursor: pointer;"><span class="glyphicon glyphicon-plus"
-                                                                           style="margin-top: 6px;"></span></a>
+                                id="writep" style="cursor: pointer;">
+                            <span class="glyphicon glyphicon-plus" style="margin-top: 6px;"></span>
+                        </a>
                     </div>
                 </div>
 
@@ -574,18 +587,15 @@
         if (confirm("确定关闭此面板吗？") == false) {
             return false;
         }
-        console.log($(this).parents('.box-show'));
         $(this).parents('.box-show').css('display', 'none');
 
     });
 
     $(".shousuo").on('click', function () {
         if ($(this).hasClass("glyphicon-plus")) {
-            console.log("0000")
             $(this).removeClass("glyphicon-plus").addClass("glyphicon-minus")
             $(this).parents(".panel").children(".shrink").slideToggle(100);
         } else {
-            console.log("1111")
             $(this).removeClass("glyphicon-minus").addClass("glyphicon-plus")
             $(this).parents(".panel").children(".shrink").slideToggle(100);
         }

@@ -195,8 +195,7 @@ li.activee>a {
 			$('#thischangetypesubmit').on('click',function(){
 				var did=$("#thischangetype").attr('thisdid');
 				var catalog=$('#thisselectvalue').val();
-				console.log("did:"+did)
-				console.log("fdsfsdfdaffd");
+
 				$.ajax({
 					url:'/changethistype',
 					type:'post',
@@ -205,8 +204,6 @@ li.activee>a {
 					data:{'did':did,'catalog':catalog},
 					datatype:'json',
 					success:function(data){
-						console.log("执行成功了么?");
-						console.log(data);
 						 if(data){
 							var alph=$('#thispills .active a').text().trim();	//获取字母表中的值
 							$('.thistable').load('outaddresspaging',{alph:alph});
