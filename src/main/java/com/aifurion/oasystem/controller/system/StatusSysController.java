@@ -56,6 +56,20 @@ public class StatusSysController {
         }
         return "systemcontrol/statusedit";
     }
+        @RequestMapping("/statusview")
+    public String typeStatusView(HttpServletRequest req) {
+        if (!StringUtils.isEmpty(req.getParameter("statusid"))) {
+            Long statusid = Long.parseLong(req.getParameter("statusid"));
+            SystemStatusList statusList = statusService.findOne(statusid);
+            req.setAttribute("status", statusList);
+            HttpSession session = req.getSession();
+            session.setAttribute("statusid", statusid);
+        }
+        return "systemcontrol/statusView";
+    }
+
+
+
 
 
     @RequestMapping("/statuscheck")

@@ -76,16 +76,11 @@ public class TypeSystemController {
         HttpSession session = req.getSession();
 		Long menuId = null;
         req.setAttribute("menuObj", menu);
-
         ResultVO res = BindingResultVOUtil.hasErrors(br);
-
         typeService.checkForm(req, menu, res);
-
         return "systemcontrol/typeedit";
 
-
     }
-
 
 
 	@GetMapping("/deletetype")
@@ -96,23 +91,16 @@ public class TypeSystemController {
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	@GetMapping("/typeview")
+	public String typeView(HttpServletRequest req) {
+		if (!StringUtils.isEmpty(req.getParameter("typeid"))){
+			Long typeid = Long.parseLong(req.getParameter("typeid"));
+			SystemTypeList typeObj = typeService.findById(typeid);
+			req.setAttribute("typeObj", typeObj);
+			HttpSession session = req.getSession();
+			session.setAttribute("typeid", typeid);
+		}
+		return "systemcontrol/typeView";
+	}
 
 }
