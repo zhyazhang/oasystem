@@ -13,6 +13,7 @@ import com.aifurion.oasystem.dao.user.UserDao;
 import com.aifurion.oasystem.entity.mail.MailReceiver;
 import com.aifurion.oasystem.entity.notice.NoticeUserRelation;
 import com.aifurion.oasystem.entity.process.Notepaper;
+import com.aifurion.oasystem.entity.user.Position;
 import com.aifurion.oasystem.entity.user.User;
 import com.aifurion.oasystem.service.NotepaperService;
 import com.aifurion.oasystem.service.UserPanelService;
@@ -168,7 +169,9 @@ public class UserPanelServiceImpl implements UserPanelService {
         String deptname = deptDao.findname(user.getDept().getDeptId());
 
         //找到职位名称
-        String positionname = positionDao.findById(user.getPosition().getId()).get().toString();
+        Position position = positionDao.findById(user.getPosition().getId()).get();
+
+
 
         //找未读通知消息
         List<NoticeUserRelation> noticelist = informRelationDao.findByReadAndUserId(false, user);
@@ -183,7 +186,7 @@ public class UserPanelServiceImpl implements UserPanelService {
 
         model.addAttribute("user", user);
         model.addAttribute("deptname", deptname);
-        model.addAttribute("positionname", positionname);
+        model.addAttribute("positionname", position.getName());
         model.addAttribute("noticelist", noticelist.size());
         model.addAttribute("maillist", maillist.size());
         model.addAttribute("notepaperlist", notepaperlist);

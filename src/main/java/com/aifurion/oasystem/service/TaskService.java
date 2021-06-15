@@ -18,14 +18,10 @@ public interface TaskService {
 
     String statisticalWeekLogin();
 
-    void getUserLogRecord(int page, HttpSession session, Model model, String basekey, String time,
-                          String icon);
+    void getUserLogRecord(int page, HttpSession session, Model model, String basekey, String time, String icon);
 
     Page<LoginRecord> userLogPaging(int page, String basekey, Long userid, Object time);
 
-    void getUserLog(int page, HttpSession session, Model model, String basekey, String time,
-                    String icon);
-
-
+    void getUserLog(int page, HttpSession session, Model model, String basekey, String time, String icon);
 
 }

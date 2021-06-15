@@ -38,8 +38,8 @@
 						<#if userloglist?? & userloglist?size gt 0>
 						<#list userloglist as ulog>
 							<tr>
-								<td><span>${(ulog.title)!''}</span></td>
-								<td><span>${(ulog.logTime)!''}</span></td>
+								<td><span>${(ulog.user.userName)!''}</span></td>
+								<td><span>${(ulog.loginTime)!''}</span></td>
 								<td><span>${(ulog.ipAddr)!''}</span></td>
 								<td><a href="${(ulog.url)!''};" class="label xiugai info"><span
 												class="glyphicon glyphicon-search "></span> 查看</a> </td>

@@ -96,12 +96,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void getUserLog(int page, HttpSession session, Model model, String basekey, String time, String icon) {
 
-         long userid = Long.parseLong(String.valueOf(session.getAttribute("userId")));
+        long userid = Long.parseLong(String.valueOf(session.getAttribute("userId")));
         setTwo(model, basekey, time, icon);
         Page<LoginRecord> page3 = userLogPaging(page, basekey, userid, time);
         model.addAttribute("page", page3);
         model.addAttribute("userloglist", page3.getContent());
-
         model.addAttribute("url", "morelogtable");
 
 

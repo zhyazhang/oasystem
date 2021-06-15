@@ -12,7 +12,6 @@ $(function () {
     var year2 = year;
     var month2 = month;
     yearmonth = year + "年" + month + "月";
-    ;
 
 
     function getdaysofmonth(yy, mm) {
